@@ -47,7 +47,7 @@ class Matrix:
 			if self.shape[1] != other.shape[0]:
 				raise ValueError('The number of columns in matrix a has to be equal to the number of rows in matrix b')
 			bt = other.T()
-			data = [[sum(a * b for a, b in zip(row, row2))] for row2 in bt.data for row in self.data]
+			data = [[sum(a * b for a, b in zip(row, row2))] for row in self.data for row2 in bt.data]
 			return Matrix(data)
 		elif isinstance(other, (int, float)):
 			data = [[self.data[col][idx] * other for col in range(self.shape[0])] for idx in range(self.shape[1])]
