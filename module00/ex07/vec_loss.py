@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def accepts(*types):
 	def check_accepts(f):
 		assert len(types) == f.__code__.co_argcount
