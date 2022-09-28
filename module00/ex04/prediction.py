@@ -29,5 +29,3 @@ def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
 	This function should not raise any Exception.
 	"""
 	return (theta[0] + x * theta[1]).reshape(x.shape[0], -1)
-
-
