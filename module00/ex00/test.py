@@ -90,13 +90,17 @@ def main() -> None:
 		[8]
 	])
 	v12 = v1 + v2
-	# Output:
 	assert v12.shape == (3, 1)
 	assert v12.data == [[3], [6], [11]]
 
 	dot = v1.dot(v2)
 	assert isinstance(dot, (int, float))
 	assert dot == 1 * 2 + 2 * 4 + 3 * 8  # 34
+
+	print(repr(v12))
+	assert type(eval(repr(v12))) == Vector
+	assert type(eval(repr(m1))) == Matrix
+	print(str(v12))
 
 
 if __name__ == '__main__':

@@ -70,7 +70,7 @@ class Matrix:
 		return str(self.data)
 
 	def __repr__(self):
-		return self.__str__()
+		return f'{type(self).__name__}({self.data})'
 
 	def T(self) -> Matrix | Vector:
 		data = [[self.data[col][idx] for col in range(self.shape[0])] for idx in range(self.shape[1])]
