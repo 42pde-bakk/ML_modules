@@ -73,11 +73,11 @@ class TinyStatistician:
 if __name__ == '__main__':
 	tstat = TinyStatistician
 	a = np.array([1, 42, 300, 10, 59])
-	# assert tstat.mean(a) == 82.4, f'I came up with {tstat.mean(a)}'
-	# assert tstat.median(a) == 42.0, f'I came up with {tstat.median(a)}'
-	# assert tstat.quartiles(a) == [10.0, 59.0], f'I came up with {tstat.quartiles(a)}'
-	# assert tstat.var(a) == 12279.439999999999, f'I came up with {tstat.var(a)}'
-	# assert tstat.std(a) == 110.81263465868862, f'I came up with {tstat.std(a)}'
+	assert tstat.mean(a) == 82.4, f'I came up with {tstat.mean(a)}'
+	assert tstat.median(a) == 42.0, f'I came up with {tstat.median(a)}'
+	assert tstat.quartiles(a) == [10.0, 59.0], f'I came up with {tstat.quartiles(a)}'
+	assert tstat.var(a) == 12279.439999999999, f'I came up with {tstat.var(a)}'
+	assert tstat.std(a) == 110.81263465868862, f'I came up with {tstat.std(a)}'
 
 	assert tstat.percentile(a, 10) == 4.6, f'I came up with {tstat.percentile(a, 10)}'
 	assert tstat.percentile(a, 15) == 6.4, f'I came up with {tstat.percentile(a, 10)}'
