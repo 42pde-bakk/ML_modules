@@ -18,7 +18,6 @@ class Matrix:
 		elif isinstance(arg, list):
 			self.data = deepcopy(arg)
 			self.shape = len(arg), len(arg[0])
-			pass
 		else:
 			raise NotImplementedError
 
