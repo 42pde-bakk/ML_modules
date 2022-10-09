@@ -29,7 +29,9 @@ def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
 	Raises:
 	This function should not raise any Exception.
 	"""
-	return (theta[0] + x * theta[1]).reshape(x.shape[0], -1)
+	ones = np.ones(shape=(x.shape[0]))
+	new = np.column_stack((ones, x))
+	return new.dot(theta)
 
 
 def plot(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> None:
