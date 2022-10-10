@@ -9,6 +9,7 @@ def main() -> None:
 	# Example 0:
 	theta1 = np.array([2, 0.7]).reshape((-1, 1))
 	res = simple_gradient(x, y, theta1)
+	print(f'first simple_gradient:\n{res}')
 	a = np.array([
 		[-19.0342574],
 		[-586.66875564]
@@ -17,7 +18,9 @@ def main() -> None:
 
 	# Example 1:
 	theta2 = np.array([1, -0.4]).reshape((-1, 1))
-	assert np.allclose(simple_gradient(x, y, theta2), np.array([
+	res = simple_gradient(x, y, theta2)
+	print(f'second simple gradient:\n{res}')
+	assert np.allclose(res, np.array([
 		[-57.86823748],
 		[-2230.12297889]
 	]))

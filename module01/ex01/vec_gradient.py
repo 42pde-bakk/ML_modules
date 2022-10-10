@@ -15,6 +15,11 @@ def accepts(*types):
 	return check_accepts
 
 
+@accepts(np.ndarray, np.ndarray)
+def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
+	return x.dot(theta)
+
+
 @accepts(np.ndarray, np.ndarray, np.ndarray)
 def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
 	"""Computes a gradient vector from three non-empty numpy.array, with a for-loop.
@@ -32,6 +37,6 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
 	"""
 	if any(a.size == 0 for a in [x, y, theta]):
 		return None
-	m = y.size
-	x = np.hstack((np.ones_like(x), x))
-	return (1 / m) * (x.transpose().dot(x.dot(theta) - y))
+	ones = np.ones_like(x)
+	x: np.ndarray = np.column_stack((ones, x))
+	return (x.T.dot(predict_(x, theta) - y)) / x.shape[0]

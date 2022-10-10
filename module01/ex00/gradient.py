@@ -17,7 +17,9 @@ def accepts(*types):
 
 @accepts(np.ndarray, np.ndarray)
 def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
-	return (theta[0] + x * theta[1]).reshape(x.shape)
+	ones = np.ones(shape=(x.shape[0]))
+	new = np.column_stack((ones, x))
+	return new.dot(theta)
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray)
@@ -37,7 +39,8 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
 	This function should not raise any Exception.
 	"""
 	preds = predict_(x, theta)
-
-	first = (preds - y).sum() / y.size
-	second = ((preds - y) * x).sum() / y.size
-	return np.array([first, second]).reshape(theta.shape)
+	gradients = [
+		(preds - y).sum() / y.size,
+		((preds - y) * x).sum() / y.size
+	]
+	return np.array(gradients).reshape(theta.shape)
