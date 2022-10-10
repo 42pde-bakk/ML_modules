@@ -1,5 +1,5 @@
 import numpy as np
-from fit import fit_
+from fit import fit_, predict
 
 
 def main() -> None:
@@ -8,18 +8,19 @@ def main() -> None:
 	theta = np.array([1, 1]).reshape((-1, 1))
 	# Example 0:
 	theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1500000)
-	theta1
+	print(f'{theta1 = }')
 	# Output:
-	array([[1.40709365],
-	       [1.1150909]])
+	# array([[1.40709365],
+	#        [1.1150909]])
 	# Example 1:
-	predict(x, theta1)
-	# Output:
-	array([[15.3408728],
-	       [25.38243697],
-	       [36.59126492],
-	       [55.95130097],
-	       [65.53471499]])
+	preds = predict(x, theta1)
+	print(f'{preds = }')
+	# # Output:
+	# array([[15.3408728],
+	#        [25.38243697],
+	#        [36.59126492],
+	#        [55.95130097],
+	#        [65.53471499]])
 
 
 if __name__ == '__main__':
