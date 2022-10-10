@@ -15,8 +15,8 @@ def accepts(*types):
 	return check_accepts
 
 
-@accepts(np.ndarray, np.ndarray, np.ndarray, int)
-def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: np.ndarray, max_iter: int) -> np.ndarray:
+@accepts(np.ndarray, np.ndarray, np.ndarray, np.ndarray, int)
+def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, max_iter: int) -> np.ndarray:
 	"""
 	Description:
 	Fits the model to the training dataset contained in x and y.
