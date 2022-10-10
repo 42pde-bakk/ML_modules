@@ -17,14 +17,9 @@ def accepts(*types):
 
 @accepts(np.ndarray, np.ndarray)
 def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray | None:
-	return (theta[0] + x * theta[1]).reshape(x.shape[0])
-
-
-@accepts(np.ndarray, np.ndarray)
-def loss_elem_(y: np.ndarray, y_hat: np.ndarray) -> np.ndarray | None:
-	if y.size == 0 or y.shape != y_hat.shape:
-		return None
-	return y_hat - y
+	ones = np.ones(shape=(x.shape[0]))
+	new = np.column_stack((ones, x))
+	return new.dot(theta)
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray)

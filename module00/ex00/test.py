@@ -4,6 +4,7 @@ from matrix import Matrix, Vector
 def main() -> None:
 	# Simple constructor and Matrix.T() tests
 	assert Matrix((3, 3)).shape == (3, 3), 'Error in Matrix((3, 3))'
+	assert all(all(x == 0 for x in row) for row in Matrix((3, 3)).data)
 	m1 = Matrix([
 		[0.0, 1.0],
 		[2.0, 3.0],
