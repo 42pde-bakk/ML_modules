@@ -8,7 +8,7 @@ from mylinearregression import MyLinearRegression as MyLR
 def plot_mse_scores(losses: list):
 	""" Plots a bar plot showing the MSE score of the models
 		in function of the polynomial degree of the hypothesis"""
-	plt.bar(range(1, 7), losses)
+	plt.plot(range(1, 7), losses)
 	plt.xlabel('Amount of polynomials')
 	plt.ylabel('MSE score')
 	plt.show()
@@ -30,7 +30,8 @@ def main():
 	]
 
 	for i in range(6):
-		models[i].alpha /= (i + 1) * 100000
+		models[i].alpha = 1 / (10_000 ** (i + 1))
+		models[i].max_iter = 1_000_000
 		x_ = add_polynomial_features(x, i + 1)
 		print(f'model[{i}].fit_() gives {models[i].fit_(x_, y)}')
 		y_hat = models[i].predict_(x_)
@@ -39,6 +40,23 @@ def main():
 		losses.append(loss)
 
 	plot_mse_scores(losses)
+
+	x_cont = np.arange(1, 6.5, 0.001).reshape(-1, 1)
+
+	for idx, model in enumerate(models):
+		polynomial = idx + 1
+		x_ = add_polynomial_features(x, polynomial)
+		y_hat = model.predict_(x_)
+		plt.scatter(x, y_hat, label=f'Polynomial {polynomial}')
+
+		x_ = add_polynomial_features(x_cont, polynomial)
+		plt.plot(x_cont, model.predict_(x_), label=f'Polynomial {polynomial} predictions')
+
+	plt.scatter(x, y, label='The Actual Dataset', color='black')
+	plt.legend(loc='lower left')
+	plt.xlabel('Micrograms')
+	plt.ylabel('Score')
+	plt.show()
 
 
 if __name__ == '__main__':
