@@ -53,9 +53,4 @@ def gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	"""
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
-	print(f'{x=}')
-	print(f'{theta=}')
-	inner = x.dot(theta)
-	inner = inner - y
-	outer = x.T.dot(inner)
-	return outer / x.shape[0]
+	return x.T.dot(x.dot(theta) - y) / x.shape[0]
