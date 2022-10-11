@@ -14,4 +14,3 @@ def zscore(x: np.ndarray) -> np.ndarray | None:
 	if not isinstance(x, np.ndarray) or x.size == 0:
 		return
 	return (x - x.mean()) / x.std()
-	# return (x - TinyStatistician.mean(x)) / TinyStatistician.std(x)
