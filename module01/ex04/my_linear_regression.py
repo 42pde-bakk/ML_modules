@@ -57,3 +57,16 @@ class MyLinearRegression:
 		if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray) or y.size == 0 or y_hat.size == 0:
 			return None
 		return np.square(y_hat - y).sum() / y.shape[0]
+
+	def plot_(self, x: np.ndarray, y: np.ndarray) -> None:
+		plt.scatter(x, y, color='b')
+		y_hat = self.predict_(x)
+		plt.scatter(x, y_hat, color='limegreen')
+		plt.plot(x, y_hat, 'limegreen', linestyle='--')
+		plt.grid(visible=True)
+		plt.xlabel('Quantity of blue pill (in micrograms)')
+		plt.ylabel('Space driving score')
+		plt.show()
+
+	# def plot_loss_function_evolution(self, x: np.ndarray, y: np.ndarray) -> None:
+
