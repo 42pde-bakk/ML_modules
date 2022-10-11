@@ -6,7 +6,7 @@ class MyLinearRegression:
 	Description: My personal linear regression class to fit like a boss.
 	"""
 
-	def __init__(self, thetas: np.ndarray, alpha: float = 0.001, max_iter: int = 10000):
+	def __init__(self, thetas: np.ndarray, alpha: float = 0.0001, max_iter: int = 100000):
 		if not isinstance(thetas, np.ndarray) or thetas.size == 0:
 			raise TypeError('Bad Thetas given to MyLinearRegression.__init__()')
 		if not isinstance(alpha, float) or alpha < 0 or alpha >= 1:
