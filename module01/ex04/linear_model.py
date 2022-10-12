@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from my_linear_regression import MyLinearRegression as MyLR
+import matplotlib
 from matplotlib import pyplot as plt
-import matplotlib.pylab as pl
 
 
 def plot(x: np.ndarray, y: np.ndarray, y_hat: np.ndarray) -> None:
@@ -29,7 +29,7 @@ def plot_loss(x: np.ndarray, y: np.ndarray, thetas: np.ndarray) -> None:
 	for idx, (theta0, color) in enumerate(zip(theta0_list, colors)):
 		losses = []
 		for _, theta1 in np.ndenumerate(theta1_list):
-			lr.thetas = np.array([[theta0], [theta1]])
+			lr.thetas = np.array([[theta0], [theta1]], dtype=object)
 			loss = lr.mse_(y, lr.predict_(x))
 			losses.append(loss)
 		plt.plot(theta1_list, losses, color=color, label=f'J((θ0=c{idx},θ1)')
@@ -41,7 +41,11 @@ def plot_loss(x: np.ndarray, y: np.ndarray, thetas: np.ndarray) -> None:
 
 
 def main() -> None:
-	data = pd.read_csv('are_blue_pills_magic.csv')
+	try:
+		data = pd.read_csv('../resources/are_blue_pills_magic.csv')
+	except (FileNotFoundError, pd.errors.EmptyDataError) as e:
+		print('Error. Please supply a valid path to the csv file')
+		exit(1)
 	Xpill = np.array(data['Micrograms']).reshape(-1, 1)
 	Yscore = np.array(data['Score']).reshape(-1, 1)
 	linear_model1 = MyLR(np.array([[89.0], [-8]]))
@@ -50,7 +54,7 @@ def main() -> None:
 	linear_model1.fit_(Xpill, Yscore)
 	y_hat2 = linear_model1.predict_(Xpill)
 
-	# plot(Xpill, Yscore, y_hat2)
+	plot(Xpill, Yscore, y_hat2)
 	plot_loss(Xpill, Yscore, linear_model1.thetas)
 
 
