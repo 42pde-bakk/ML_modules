@@ -5,7 +5,12 @@ from sklearn.metrics import mean_squared_error
 
 
 def main() -> None:
-	data = pd.read_csv('are_blue_pills_magic.csv')
+	try:
+		data = pd.read_csv('../resources/are_blue_pills_magic.csv')
+	except (FileNotFoundError, pd.errors.EmptyDataError) as e:
+		print('Error. Please supply a valid path to the csv file')
+		exit(1)
+
 	Xpill = np.array(data['Micrograms']).reshape(-1, 1)
 	Yscore = np.array(data['Score']).reshape(-1, 1)
 	linear_model1 = MyLR(np.array([[89.0], [-8]]))
