@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from my_linear_regression import MyLinearRegression as MyLR
-import matplotlib
 from matplotlib import pyplot as plt
 
 
