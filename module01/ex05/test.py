@@ -12,7 +12,6 @@ def main():
 		0.94823559, 0.17240647, -1.89647119]
 	)
 	assert np.allclose(x_result, x_answer)
-	print(f'{x_result.shape=}, {x_answer.shape=}')
 
 	# Example 2:
 	Y = np.array([2, 14, -13, 5, 12, 4, -19])
