@@ -7,7 +7,7 @@ def main() -> None:
 	y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
 	theta = np.array([1, 1]).reshape((-1, 1))
 
-	theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1500000)
+	theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1_500_000)
 	print(f'{theta1 = }')
 	assert np.allclose(theta1, np.array([
 		[1.40709365],
