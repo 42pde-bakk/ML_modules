@@ -30,6 +30,7 @@ class MyLinearRegression:
 			return None
 		ones = np.ones(shape=(x.shape[0], 1))
 		x = np.column_stack((ones, x))
+		print(f'new {x.shape = }')
 		for idx in range(self.max_iter):
 			self.thetas = self.thetas - (self.alpha * self.gradient_(x, y))
 		return self.thetas
@@ -64,3 +65,18 @@ class MyLinearRegression:
 		if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray) or y.size == 0 or y_hat.size == 0:
 			return None
 		return np.square(y_hat - y).sum() / y.shape[0]
+
+	@staticmethod
+	def zscore(x: np.ndarray) -> np.ndarray | None:
+		"""Computes the normalized version of a non-empty numpy.ndarray using the z-score standardization.
+		Args:
+		x: has to be an numpy.ndarray, a vector.
+		Returns:
+		x’ as a numpy.ndarray.
+		None if x is a non-empty numpy.ndarray or not a numpy.ndarray.
+		Raises:
+		This function shouldn’t raise any Exception.
+		"""
+		if not isinstance(x, np.ndarray) or x.size == 0:
+			return
+		return (x - x.mean()) / x.std()
