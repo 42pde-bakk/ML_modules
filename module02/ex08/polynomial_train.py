@@ -15,7 +15,8 @@ def plot_mse_scores(losses: list):
 
 
 def main():
-	data = pd.read_csv('are_blue_pills_magic.csv')
+	csv_path = '../resources/are_blue_pills_magic.csv'
+	data = pd.read_csv(csv_path)
 	x = data['Micrograms'].to_numpy().reshape(-1, 1)
 	y = data['Score'].to_numpy().reshape(-1, 1)
 

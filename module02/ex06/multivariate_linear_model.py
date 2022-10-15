@@ -83,6 +83,7 @@ def test_univariate(data: pd.DataFrame) -> None:
 
 
 if __name__ == '__main__':
-	spacecraft_data = pd.read_csv('spacecraft_data.csv')
-	# test_univariate(spacecraft_data)
+	csv_path = '../resources/spacecraft_data.csv'
+	spacecraft_data = pd.read_csv(csv_path)
+	test_univariate(spacecraft_data)
 	multivariate(spacecraft_data)
