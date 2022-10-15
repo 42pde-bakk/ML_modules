@@ -43,8 +43,6 @@ def logistic_predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	Raises:
 	This function should not raise any Exception.
 	"""
-	# print(f'{x=}')
-	# print(f'{theta=}')
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
 	return sigmoid_(x.dot(theta))
