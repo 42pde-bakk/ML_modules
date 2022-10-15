@@ -33,7 +33,7 @@ def sigmoid_(x: np.ndarray) -> np.ndarray:
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray)
-def log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
+def vec_log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	"""Computes a gradient vector from three non-empty numpy.ndarray, with a for-loop. The three arrays must have compatiblArgs:
 	x: has to be an numpy.ndarray, a matrix of shape m * n.
 	y: has to be an numpy.ndarray, a vector of shape m * 1.
@@ -48,10 +48,5 @@ def log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
 	y_hat = sigmoid_(x.dot(theta))
-	result = []
-	for j in range(x.shape[1]):
-		total = 0
-		for row_nb in range(x.shape[0]):
-			total += (y_hat[row_nb][0] - y[row_nb][0]) * x[row_nb][j]
-		result.append(total / y.shape[0])
-	return np.array(result).reshape(-1, 1)
+
+	return x.T.dot(y_hat - y) / y.shape[0]
