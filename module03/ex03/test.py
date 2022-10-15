@@ -1,6 +1,6 @@
 import numpy as np
 from log_pred import logistic_predict_
-from log_loss import vec_log_loss_
+from vec_log_loss import vec_log_loss_
 
 
 def main():
@@ -18,6 +18,7 @@ def main():
 	x2 = np.array([[4], [7.16], [3.2], [9.37], [0.56]])
 	theta2 = np.array([[2], [0.5]])
 	y_hat2 = logistic_predict_(x2, theta2)
+	# result = log_loss_(y2, y_hat2)
 	result = vec_log_loss_(y2, y_hat2)
 	print(f'Example 2: {result}\n')
 	assert np.allclose(result, 2.4825011602474483)

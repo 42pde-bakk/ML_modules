@@ -16,7 +16,7 @@ def accepts(*types):
 
 
 @accepts(np.ndarray, np.ndarray, float)
-def log_loss_(y: np.ndarray, y_hat: np.ndarray, eps: float = 1e-15) -> np.ndarray:
+def vec_log_loss_(y: np.ndarray, y_hat: np.ndarray, eps: float = 1e-15) -> np.ndarray:
 	"""
 	Computes the logistic loss value.
 	Args:
