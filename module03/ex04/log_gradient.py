@@ -48,4 +48,4 @@ def log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
 	y_hat = sigmoid_(x.dot(theta))
-	return x * (y_hat - y) / y.shape[0]
+	return x.T.dot(y_hat - y) / y.shape[0]
