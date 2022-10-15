@@ -39,26 +39,21 @@ def main():
 	y2_test = (y_test == favourite_zipcode).astype(int)
 
 	initial_thetas = np.ones(shape=(column_len + 1, 1))
-	model = MyLR(initial_thetas, alpha=0.0001, max_iter=10_000)
+	model = MyLR(initial_thetas, alpha=0.0001, max_iter=300_000)
 	model.fit_(x_train, y2_train)
-	print(f'new thetas: {model.theta}')
 	predictions = model.predict_(x_test)
-	loss = model.loss_(y2_test, predictions)
-	print(f'loss = {loss}')
 	correct = (np.round(predictions) == y2_test).sum()
 	print(f'Correctly predicted values {correct} / {y2_test.shape[0]} = {correct / y2_test.shape[0] * 100}%')
 
 	for idx, feature in enumerate(features):
 		plt.title(feature)
 		column = x_test[:, idx]
-		plt.scatter(column, y2_test, label='Real values')
-		plt.scatter(column, predictions, label='My prediction')
+		plt.scatter(column, y2_test, label='Real values', s=200)
+		plt.scatter(column, predictions, label='My prediction', s=50)
 		plt.scatter(column, np.round(predictions), label='My rounded prediction')
 
 		plt.legend(loc='best')
 		plt.show()
-
-
 
 
 if __name__ == '__main__':
