@@ -7,9 +7,6 @@ def main():
 	y1 = np.array([1]).reshape((-1, 1))
 	x1 = np.array([4]).reshape((-1, 1))
 	theta1 = np.array([[2], [0.5]])
-	print(f'{x1=}')
-	print(f'{y1=}')
-	print(f'{theta1=}')
 	result = log_gradient(x1, y1, theta1)
 	answer = np.array([
 		[-0.01798621],
