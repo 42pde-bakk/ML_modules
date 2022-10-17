@@ -48,7 +48,7 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
 	return (x.T.dot(predict_(x, theta) - y)) / x.shape[0]
 
 
-@accepts(np.ndarray, np.ndarray, np.ndarray, np.ndarray, int)
+@accepts(np.ndarray, np.ndarray, np.ndarray, float, int)
 def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, max_iter: int) -> np.ndarray:
 	"""
 	Description:

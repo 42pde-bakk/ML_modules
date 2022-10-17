@@ -25,5 +25,18 @@ def main() -> None:
 	]))
 
 
+def correction_tests() -> None:
+	x = np.array(range(1, 101)).reshape(-1, 1)
+	y = 0.75 * x + 5
+	theta = np.array([[1.], [1.]])
+
+	print(type(x), type(y), type(theta), type(1e-5), type(20000))
+	result = fit_(x, y, theta, alpha=1e-5, max_iter=20000)
+	answer = np.array([[1.18949688], [0.80687732]])
+	print(f'Correction result: {result}')
+	assert np.allclose(result, answer)
+
+
 if __name__ == '__main__':
 	main()
+	# correction_tests()
