@@ -63,5 +63,36 @@ def main():
 	assert np.allclose(result, answer)
 
 
+def correction_tests():
+	x = np.array([0]).reshape(-1, 1)
+	theta = np.array([[0], [0]])
+	result = logistic_predict_(x, theta)
+	answer = np.array([[0.5]])
+	print(f'Result = {result}')
+	assert np.allclose(result, answer)
+
+	x = np.array([1]).reshape(-1, 1)
+	theta = np.array([[1], [1]])
+	result = logistic_predict_(x, theta)
+	answer = np.array([[0.880797077978]])
+	print(f'Result = {result}')
+	assert np.allclose(result, answer)
+
+	x = np.array([[1, 0], [0, 1]])
+	theta = np.array([[1], [2], [3]])
+	result = logistic_predict_(x, theta)
+	answer = np.array([[0.952574126822], [0.982013790038]])
+	print(f'Result = {result}')
+	assert np.allclose(result, answer)
+
+	x = np.array([[1, 1], [1, 1]])
+	theta = np.array([[1], [2], [3]])
+	result = logistic_predict_(x, theta)
+	answer = np.array([[0.997527376843], [0.997527376843]])
+	print(f'Result = {result}')
+	assert np.allclose(result, answer)
+
+
 if __name__ == '__main__':
 	main()
+	correction_tests()

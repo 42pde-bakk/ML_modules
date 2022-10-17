@@ -30,6 +30,5 @@ def log_loss_(y: np.ndarray, y_hat: np.ndarray, eps: float = 1e-15) -> np.ndarra
 	This function should not raise any Exception.
 	"""
 	m = y.shape[0]
-	y_hat += eps
-	result = y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)
+	result = y * np.log(y_hat + eps) + (1 - y) * np.log(abs(1 - y_hat) + eps)
 	return -np.sum(result) / m
