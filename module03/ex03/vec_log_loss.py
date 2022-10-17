@@ -29,6 +29,6 @@ def vec_log_loss_(y: np.ndarray, y_hat: np.ndarray, eps: float = 1e-15) -> np.nd
 	Raises:
 	This function should not raise any Exception.
 	"""
-	y_hat += eps
-	result = y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)
-	return -np.sum(result) / y.shape[0]
+	ones = np.ones_like(y)
+	m = y.shape[0]
+	return -np.sum(np.dot(y.T, np.log(y_hat)) + np.dot((ones - y).T, np.log(ones - y_hat))) / m
