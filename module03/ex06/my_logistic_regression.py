@@ -20,6 +20,7 @@ def accepts(*types):
 class MyLogisticRegression:
 	"""
 	Description: My personal logistic regression to classify things.
+	If a function has the __ prefix, it means that it assumes the x value has a column of ones already...
 	"""
 
 	def __init__(self, theta: np.ndarray, alpha: float = 0.001, max_iter: int = 1000):
@@ -44,7 +45,6 @@ class MyLogisticRegression:
 		"""
 		return 1 / (1 + np.exp(-x))
 
-	# @accepts(np.ndarray, np.ndarray, np.ndarray)
 	def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
 		"""Computes a gradient vector from three non-empty numpy.ndarray, with a for-loop. The three arrays must have compatiblArgs:
 		x: has to be an numpy.ndarray, a matrix of shape m * n.
@@ -59,11 +59,11 @@ class MyLogisticRegression:
 		"""
 		ones = np.ones(shape=(x.shape[0], 1))
 		x = np.hstack((ones, x))
-		y_hat = MyLogisticRegression.sigmoid_(x.dot(self.theta))
+		y_hat = self.__predict_(x)
 		return x.T.dot(y_hat - y) / y.shape[0]
 
 	def __gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
-		y_hat = MyLogisticRegression.sigmoid_(x.dot(self.theta))
+		y_hat = self.__predict_(x)
 		return x.T.dot(y_hat - y) / y.shape[0]
 
 	def fit_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -108,8 +108,7 @@ class MyLogisticRegression:
 		loss_elem = MyLogisticRegression.loss_elem_(y, y_hat, eps)
 		return -loss_elem.sum() / y.shape[0]
 
-	# @accepts(np.ndarray)
-	def predict_(self, x: np.ndarray) -> np.ndarray:
+	def __predict_(self, x: np.ndarray) -> np.ndarray:
 		"""Computes the vector of prediction y_hat from two non-empty numpy.ndarray.
 		Args:
 		x: has to be an numpy.ndarray, a vector of dimension m * n.
@@ -121,6 +120,22 @@ class MyLogisticRegression:
 		Raises:
 		This function should not raise any Exception.
 		"""
+		return MyLogisticRegression.sigmoid_(x.dot(self.theta))
+
+	def predict_(self, x: np.ndarray) -> np.ndarray | None:
+		"""Computes the vector of prediction y_hat from two non-empty numpy.ndarray.
+		Args:
+		x: has to be an numpy.ndarray, a vector of dimension m * n.
+		theta: has to be an numpy.ndarray, a vector of dimension (n + 1) * 1.
+		Returns:
+		y_hat as a numpy.ndarray, a vector of dimension m * 1.
+		None if x or theta are empty numpy.ndarray.
+		None if x or theta dimensions are not appropriate.
+		Raises:
+		This function should not raise any Exception.
+		"""
+		if not isinstance(x, np.ndarray) or x.size == 0:
+			return None
 		ones = np.ones(shape=(x.shape[0], 1))
 		x = np.hstack((ones, x))
 		return MyLogisticRegression.sigmoid_(x.dot(self.theta))
