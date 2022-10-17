@@ -52,7 +52,7 @@ def multivariate(data: np.ndarray) -> None:
 	features = ['Age', 'Thrust_power', 'Terameters']
 	x = data[features].to_numpy().reshape(-1, 3)
 	y = data['Sell_price'].to_numpy().reshape(-1, 1)
-	lr = MyLR(np.ones((4, 1), dtype=float), alpha=0.00001, max_iter=1_500_000)
+	lr = MyLR(np.ones((4, 1), dtype=float), alpha=0.00005, max_iter=10_000_000)
 	lr.fit_(x, y)
 
 	print(f'Multivariate thetas = {lr.thetas}')
@@ -66,22 +66,22 @@ def test_univariate(data: pd.DataFrame) -> None:
 		data['Age'].to_numpy().reshape(-1, 1),
 		data['Sell_price'].to_numpy().reshape(-1, 1),
 		feature='Age',
-		alpha=0.001,
-		max_iter=25000
+		alpha=0.0001,
+		max_iter=500_000
 	)
 	plot_univariate(
 		data['Thrust_power'].to_numpy().reshape(-1, 1),
 		data['Sell_price'].to_numpy().reshape(-1, 1),
 		feature='Thrust_power',
 		alpha=0.0001,
-		max_iter=1000
+		max_iter=500_000
 	)
 	plot_univariate(
 		data['Terameters'].to_numpy().reshape(-1, 1),
 		data['Sell_price'].to_numpy().reshape(-1, 1),
 		feature='Terameters',
 		alpha=0.0001,
-		max_iter=100000
+		max_iter=500_000
 	)
 
 
@@ -89,4 +89,4 @@ if __name__ == '__main__':
 	csv_path = '../resources/spacecraft_data.csv'
 	spacecraft_data = pd.read_csv(csv_path)
 	test_univariate(spacecraft_data)
-	multivariate(spacecraft_data)
+	# multivariate(spacecraft_data)
