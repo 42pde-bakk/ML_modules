@@ -25,6 +25,7 @@ def plot_univariate(x: np.ndarray, y: np.ndarray, feature: str, alpha: float, ma
 	initial_thetas = np.ones((2, 1), dtype=float)
 	lr = MyLR(initial_thetas, alpha=alpha, max_iter=max_iter)
 	lr.fit_(x, y)
+	print(f'Univariate thetas = {lr.thetas}')
 	y_hat = lr.predict_(x)
 
 	plt.scatter(x, y, color=colours[0], label='Sell price')
@@ -51,11 +52,13 @@ def multivariate(data: np.ndarray) -> None:
 	features = ['Age', 'Thrust_power', 'Terameters']
 	x = data[features].to_numpy().reshape(-1, 3)
 	y = data['Sell_price'].to_numpy().reshape(-1, 1)
-	lr = MyLR(np.ones((4, 1), dtype=float), alpha=0.00001, max_iter=10000)
+	lr = MyLR(np.ones((4, 1), dtype=float), alpha=0.00001, max_iter=1_500_000)
 	lr.fit_(x, y)
 
+	print(f'Multivariate thetas = {lr.thetas}')
+
 	for idx, feature in enumerate(features):
-		plot_multivariate(x[:,idx], y, lr.predict_(x), feature)
+		plot_multivariate(x[:, idx], y, lr.predict_(x), feature)
 
 
 def test_univariate(data: pd.DataFrame) -> None:
