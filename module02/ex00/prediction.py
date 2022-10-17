@@ -31,6 +31,8 @@ def simple_predict(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	Raises:
 	This function should not raise any Exception.
 	"""
-	ones = np.ones(shape=(x.shape[0], 1))
-	x = np.hstack((ones, x))
-	return x.dot(theta)
+	out = []
+	for row in x:
+		total = theta[0] + sum([item * th for item, th in zip(row, theta[1:])])
+		out.append(total)
+	return np.array(out).reshape(-1, 1)
