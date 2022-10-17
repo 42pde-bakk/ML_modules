@@ -32,6 +32,22 @@ def sigmoid_(x: np.ndarray) -> np.ndarray:
 	return 1 / (1 + np.exp(-x))
 
 
+@accepts(np.ndarray, np.ndarray)
+def logistic_predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
+	"""Computes the vector of prediction y_hat from two non-empty numpy.ndarray.
+	Args:
+	x: has to be an numpy.ndarray, a vector of dimension m * n.
+	theta: has to be an numpy.ndarray, a vector of dimension (n + 1) * 1.
+	Returns:
+	y_hat as a numpy.ndarray, a vector of dimension m * 1.
+	None if x or theta are empty numpy.ndarray.
+	None if x or theta dimensions are not appropriate.
+	Raises:
+	This function should not raise any Exception.
+	"""
+	return sigmoid_(x.dot(theta))
+
+
 @accepts(np.ndarray, np.ndarray, np.ndarray)
 def vec_log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	"""Computes a gradient vector from three non-empty numpy.ndarray, with a for-loop. The three arrays must have compatiblArgs:
@@ -47,6 +63,6 @@ def vec_log_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndar
 	"""
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
-	y_hat = sigmoid_(x.dot(theta))
 
+	y_hat = logistic_predict_(x, theta)
 	return x.T.dot(y_hat - y) / y.shape[0]
