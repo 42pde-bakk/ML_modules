@@ -7,15 +7,15 @@ from matplotlib import pyplot as plt
 MYDICT = {
 	'Age': {
 		'colours': ('midnightblue', 'dodgerblue'),
-		'label': '$x_{1}: age (in years)'
+		'label': '$x_{1}$: age (in years)'
 	},
 	'Thrust_power': {
 		'colours': ('forestgreen', 'lime'),
-		'label': '$x_{2}: thrust power (in 10 KM/s)'
+		'label': '$x_{2}$: thrust power (in 10 KM/s)'
 	},
 	'Terameters': {
 		'colours': ('darkviolet', 'violet'),
-		'label': '$x_{3}: distance totalizer value of spacecraft (in Tmeters)'
+		'label': '$x_{3}$: distance totalizer value of spacecraft (in Tmeters)'
 	}
 }
 
