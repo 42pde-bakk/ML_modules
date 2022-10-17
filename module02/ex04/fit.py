@@ -33,8 +33,7 @@ def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
 	"""
 	ones = np.ones(shape=(x.shape[0], 1))
 	x = np.hstack((ones, x))
-	result = x.dot(theta)
-	return result
+	return x.dot(theta)
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray)
