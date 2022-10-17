@@ -32,7 +32,7 @@ def plot_mse_scores(losses: list, title: str):
 
 
 def benchmark_train(x: np.ndarray, y: np.ndarray):
-	models = [MyLR(np.ones(shape=(i, 1)), alpha=0.005, max_iter=100_000) for i in range(4, 8)]
+	models = [MyLR(np.ones(shape=(i, 1)), alpha=0.005, max_iter=1_000_000) for i in range(4, 8)]
 	losses_train, losses_test = [], []
 	for idx, model in enumerate(models):
 		polynomial_degree = idx + 1
