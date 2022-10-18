@@ -17,6 +17,22 @@ def accepts(*types):
 	return check_accepts
 
 
+@accepts(np.ndarray)
+def l2(theta: np.ndarray) -> float:
+	"""Computes the L2 regularization of a non-empty numpy.ndarray, without any for-loop.
+	Args:
+		theta: has to be a numpy.ndarray, a vector of shape n * 1.
+	Returns:
+		The L2 regularization as a float.
+		None if theta in an empty numpy.ndarray.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	new_theta = theta.copy()
+	new_theta[0][0] = 0
+	return new_theta.T.dot(new_theta).sum()
+
+
 @accepts(np.ndarray, np.ndarray, np.ndarray, float)
 def reg_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: float) -> float:
 	"""Computes the regularized loss of a linear regression model from two non-empty numpy.array, without any for loop.Args:
@@ -34,4 +50,4 @@ def reg_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: floa
 	new_theta = theta.copy()
 	new_theta[0][0] = 0
 	diff = y_hat - y
-	return (np.dot(diff.T, diff) + lambda_ * np.dot(new_theta.T, new_theta)).sum() / (2 * y.shape[0])
+	return (np.dot(diff.T, diff) + lambda_ * l2(theta)) / (2 * y.shape[0])
