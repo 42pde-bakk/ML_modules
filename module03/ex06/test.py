@@ -64,6 +64,37 @@ def main():
 	print(f'Example 4: {loss = }\n')
 	assert np.isclose(loss, 1.4779126923052268)
 
+	# Extra tests
+	y = np.array([[0], [0]])
+	y_hat = np.array([[0], [0]])
+	result = mylr.loss_(y, y_hat)
+	print(f'Correction test 1: {result}')
+	assert np.isclose(result, 1e-15)
+
+	y = np.array([[0], [1]])
+	y_hat = np.array([[0], [1]])
+	result = mylr.loss_(y, y_hat)
+	print(f'Correction test 2: {result}')
+	assert np.isclose(result, 1e-15)
+
+	y = np.array([[0], [0], [0]])
+	y_hat = np.array([[1], [0], [0]])
+	result = mylr.loss_(y, y_hat)
+	print(f'Correction test 3: {result}')
+	assert np.isclose(result, 11.51292546)
+
+	y = np.array([[0], [0], [0]])
+	y_hat = np.array([[1], [0], [1]])
+	result = mylr.loss_(y, y_hat)
+	print(f'Correction test 4: {result}')
+	assert np.isclose(result, 23.02585093)
+
+	y = np.array([[0], [1], [0]])
+	y_hat = np.array([[1], [0], [1]])
+	result = mylr.loss_(y, y_hat)
+	print(f'Correction test 5: {result}')
+	assert np.isclose(result, 34.53877639)
+
 
 if __name__ == '__main__':
 	main()
