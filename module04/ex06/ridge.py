@@ -121,3 +121,9 @@ class MyRidge(MyLinearRegression):
 		for p in range(2, power + 1):
 			x_new = np.hstack((x_new, x ** p))
 		return x_new
+
+	def score(self, x: np.ndarray, y: np.ndarray) -> float:
+		y_hat = self.predict_(x)
+		u = np.square(y - y_hat).sum()
+		v = np.square(y - y).sum()
+		return 1 - u / v
