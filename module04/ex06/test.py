@@ -172,16 +172,15 @@ def test_fit():
 		[1.]
 	])
 
-	model = MyRidge(thetas, alpha=1.6e-4, max_iter=200_000, lambda_=0.6)
-	print(model.fit_)
+	model = MyRidge(thetas, alpha=2.5e-5, max_iter=100_000)
 	model.fit_(X, Y)
 	print(f'Newly fitted thetas: {model.thetas}')
 
 
 if __name__ == '__main__':
-	# test_params()
-	# test_l2()
-	# test_loss()
-	# test_predict()
-	# test_gradient()
+	test_params()
+	test_l2()
+	test_loss()
+	test_predict()
+	test_gradient()
 	test_fit()

@@ -56,9 +56,6 @@ class MyRidge(MyLinearRegression):
 			return None
 		ones = np.ones(shape=(x.shape[0], 1))
 		x_ = np.column_stack((ones, x))
-		print(f'old x: {x.shape}, {x}')
-		print(f'new x: {x_.shape}, {x_}')
-		print(f'thetas: {self.thetas}')
 		for _ in range(self.max_iter):
 			self.thetas -= (self.alpha * self.__gradient_(x_, y))
 		return self.thetas
