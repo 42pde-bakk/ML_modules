@@ -83,7 +83,7 @@ class MyRidge(MyLinearRegression):
 			This function should not raise any Exception.
 		"""
 		diff = y_hat - y
-		return (np.dot(diff.T, diff) + self.lambda_ * self.l2()) / (2 * y.shape[0])
+		return np.sum(np.dot(diff.T, diff) + self.lambda_ * self.l2()) / (2 * y.shape[0])
 
 	def mse_(self, y: np.ndarray, y_hat: np.ndarray) -> float | None:
 		diff = y_hat - y
