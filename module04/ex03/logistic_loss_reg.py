@@ -17,6 +17,22 @@ def accepts(*types):
 	return check_accepts
 
 
+@accepts(np.ndarray)
+def l2(theta: np.ndarray) -> float:
+	"""Computes the L2 regularization of a non-empty numpy.ndarray, without any for-loop.
+	Args:
+		theta: has to be a numpy.ndarray, a vector of shape n * 1.
+	Returns:
+		The L2 regularization as a float.
+		None if theta in an empty numpy.ndarray.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	new_theta = theta.copy()
+	new_theta[0][0] = 0
+	return new_theta.T.dot(new_theta).sum()
+
+
 @accepts(np.ndarray, np.ndarray, np.ndarray, float)
 def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: float):
 	"""Computes the regularized loss of a logistic regression model from two non-empty numpy.ndarray, without any for lArgs:
@@ -33,10 +49,6 @@ def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: 
 	"""
 	m = y.shape[0]
 	eps = 1e-15
-	y_hat += eps
-	new_thetas = theta.copy()
-	new_thetas[0][0] = 0
 
-	inner = y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)
-	theta_product = np.sum(np.dot(new_thetas.T, new_thetas))
-	return (-1 / m) * np.sum(inner) + (lambda_ * theta_product / (2 * m))
+	inner = y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
+	return (-1 / m) * np.sum(inner) + lambda_ * l2(theta) / (2 * m)
