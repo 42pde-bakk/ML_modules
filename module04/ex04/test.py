@@ -23,6 +23,7 @@ def main():
 		[863.46571429],
 		[-644.52142857]
 	])
+	print(f'{result_11.shape}, {answer_11.shape}')
 	assert np.allclose(result_11, answer_11)
 
 	# Example 1.2:
