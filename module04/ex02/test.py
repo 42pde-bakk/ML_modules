@@ -13,13 +13,13 @@ def main():
 	assert np.isclose(result, 0.8503571428571429)
 
 	# Example 2:
-	print(f'Example 2: {result}\n')
 	result = reg_loss_(y, y_hat, theta, .05)
+	print(f'Example 2: {result}\n')
 	assert np.isclose(result, 0.5511071428571429)
 
 	# Example 3:
-	print(f'Example 3: {result}\n')
 	result = reg_loss_(y, y_hat, theta, .9)
+	print(f'Example 3: {result}\n')
 	assert np.isclose(result, 1.116357142857143)
 
 
