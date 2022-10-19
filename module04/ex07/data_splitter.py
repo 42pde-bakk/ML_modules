@@ -19,36 +19,27 @@ def accepts(*types):
 	return check_accepts
 
 
-@accepts(np.ndarray, np.ndarray, float, float)
-def data_splitter(x: np.ndarray, y: np.ndarray, proportion: float, crossval_proprtion: float) -> Tuple | None:
-	"""Shuffles and splits the dataset (given by x and y) into a training and a test set,
+@accepts(np.ndarray, np.ndarray, float)
+def data_splitter(x: np.ndarray, y: np.ndarray, proportion: float) -> Tuple | None:
+	"""Splits the dataset (given by x and y) into a training and a test set,
 	while respecting the given proportion of examples to be kept in the training set.
 	Args:
-	x: has to be an numpy.array, a matrix of dimension m * n.
-	y: has to be an numpy.array, a vector of dimension m * 1.
-	proportion: has to be a float, the proportion of the dataset that will be assigned to the
-	training set.
+		x: has to be an numpy.array, a matrix of dimension m * n.
+		y: has to be an numpy.array, a vector of dimension m * 1.
+		proportion: has to be a float, the proportion of the dataset that will be assigned to the
+		training set.
 	Return:
-	(x_train, x_test, y_train, y_test) as a tuple of numpy.array
-	None if x or y is an empty numpy.array.
-	None if x and y do not share compatible dimensions.
-	None if x, y or proportion is not of expected type.
+		(x_train, x_test, y_train, y_test) as a tuple of numpy.array
+		None if x or y is an empty numpy.array.
+		None if x and y do not share compatible dimensions.
+		None if x, y or proportion is not of expected type.
 	Raises:
-	This function should not raise any Exception.
+		This function should not raise any Exception.
 	"""
-	if proportion + crossval_proprtion >= 1.0:
-		print(f'Error. Invalid proportions given to data_splitter.', file=sys.stderr)
-		return
 	if x.shape[0] != y.shape[0]:
 		print(f'Why are you giving me arrays of differing sizes?', file=sys.stderr)
 		return
-	index_1 = int(proportion * x.shape[0])
-	index_2 = index_1 + int(crossval_proprtion * x.shape[0])
-	rng_state = np.random.get_state()
-	np.random.shuffle(x)
-	np.random.set_state(rng_state)  # To ensure the arrays are still in unison
-	np.random.shuffle(y)
-
-	x_train, x_crossval, x_test = np.split(x, [index_1, index_2])
-	y_train, y_crossval, y_test = np.split(y, [index_1, index_2])
-	return x_train, x_crossval, x_test, y_train, y_crossval, y_test
+	cutoff = int(proportion * x.shape[0])
+	x_train, x_test = np.split(x, [cutoff])
+	y_train, t_test = np.split(y, [cutoff])
+	return x_train, x_test, y_train, t_test
