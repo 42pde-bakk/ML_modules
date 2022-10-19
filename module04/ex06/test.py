@@ -116,7 +116,7 @@ def test_gradient():
 	model = MyRidge(theta, lambda_=1)
 
 	# Example 1:
-	result_1 = model.gradient_(y, x)
+	result_1 = model.gradient_(x, y)
 	print(f'Example 1: {result_1}\n')
 	answer_1 = np.array([
 		[-60.99],
@@ -129,7 +129,7 @@ def test_gradient():
 
 	# Example 2:
 	model.set_params(lambda_=0.5)
-	result_2 = model.gradient_(y, x)
+	result_2 = model.gradient_(x, y)
 	print(f'Example 2: {result_2}\n')
 	answer_2 = np.array([
 		[-60.99],
@@ -141,7 +141,7 @@ def test_gradient():
 
 	# Example 3:
 	model.set_params(lambda_=0.0)
-	result_3 = model.gradient_(y, x)
+	result_3 = model.gradient_(x, y)
 	print(f'Example 3: {result_3}\n')
 	answer_3 = np.array([
 		[-60.99],

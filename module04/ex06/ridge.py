@@ -24,12 +24,12 @@ class MyRidge(MyLinearRegression):
 				setattr(self, key, value)
 		return self
 
-	def gradient_(self, y: np.ndarray, x: np.ndarray) -> np.ndarray:
+	def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
 		"""Computes the regularized linear gradient of three non-empty numpy.ndarray,
 		without any for-loop. The three arrays must have compatible shapes.
 		Args:
-			y: has to be a numpy.ndarray, a vector of shape m * 1.
 			x: has to be a numpy.ndarray, a matrix of dimesion m * n.
+			y: has to be a numpy.ndarray, a vector of shape m * 1.
 		Return:
 			A numpy.ndarray, a vector of shape (n + 1) * 1, containing the results of the formula for all j.
 			None if y, x, or theta are empty numpy.ndarray.
