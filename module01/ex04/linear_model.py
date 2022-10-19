@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 import pandas as pd
 from my_linear_regression import MyLinearRegression as MyLR
@@ -44,7 +46,7 @@ def main() -> None:
 		data = pd.read_csv('../resources/are_blue_pills_magic.csv')
 	except (FileNotFoundError, pd.errors.EmptyDataError) as e:
 		print('Error. Please supply a valid path to the csv file')
-		exit(1)
+		sys.exit(1)
 	Xpill = np.array(data['Micrograms']).reshape(-1, 1)
 	Yscore = np.array(data['Score']).reshape(-1, 1)
 	linear_model1 = MyLR(np.array([[89.0], [-8]]))
