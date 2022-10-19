@@ -8,7 +8,7 @@ from ridge import MyRidge
 from cross_validation import build_cross_validation_sets
 
 
-THETAS_FILE = 'models.pickle'
+MODELS_PICKLE_FILE = 'models.pickle'
 CSV_FILE_PATH = '../resources/space_avocado.csv'
 
 
@@ -19,18 +19,6 @@ def prepare_data() -> list[dict]:
 	x = data[features].to_numpy().reshape(-1, 3)
 	y = data['target'].to_numpy().reshape(-1, 1)
 	return build_cross_validation_sets(x, y, 0.75)
-
-
-def plot_mse_scores(losses: list, title: str):
-	""" Plots a bar plot showing the MSE score of the models
-		in function of the polynomial degree of the hypothesis"""
-	plt.title(title)
-	print(len(losses))
-	print(losses)
-	plt.plot(range(1, len(losses) + 1), losses)
-	plt.xlabel('Model nb')
-	plt.ylabel('Loss score')
-	plt.show()
 
 
 def benchmark_train(cross_validation_sets: list[dict]):
@@ -58,16 +46,14 @@ def benchmark_train(cross_validation_sets: list[dict]):
 
 				y_hat = model.predict_(x_test)
 				loss = model.loss_(y_test, y_hat)
-				print(f' has a loss of {loss}.')
+				print(f' has a loss of {loss} on cross-validation set {idx}.')
 				cross_validation_losses.append(loss)
 			average_loss = sum(cross_validation_losses) / len(cross_validation_losses)
 			print(f'Model {i} with λ {lambda_=} had an average loss of {average_loss}')
 			losses.append(average_loss)
 
-	thetas = [lr.thetas for lr in models]
-	with open(THETAS_FILE, 'wb') as handle:
-		pickle.dump(thetas, handle)
-	# plot_mse_scores(losses, 'Training losses')
+	with open(MODELS_PICKLE_FILE, 'wb') as handle:
+		pickle.dump(models, handle)
 
 
 if __name__ == '__main__':
