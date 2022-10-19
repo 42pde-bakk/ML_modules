@@ -23,20 +23,22 @@ def prepare_data():
 	return data_splitter(x, y, 0.9)
 
 
+def add_polynomials_and_normalize(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+	x_train_new = MyRidge.add_polynomial_features(x_train, model.polynomial)
+	x_test_new = MyRidge.add_polynomial_features(x_test, model.polynomial)
+
+	mean, std = x_train_new.mean(axis=0), x_train_new.std(axis=0)
+	x_train_norm = MyRidge.zscore_precomputed(x_train_new, mean, std)
+	x_test_norm = MyRidge.zscore_precomputed(x_test_new, mean, std)
+	return x_train_norm, x_test_norm
+
+
 def test_model(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, fit_again=False):
-	x_train = MyRidge.add_polynomial_features(x_train, model.polynomial)
-	x_test = MyRidge.add_polynomial_features(x_test, model.polynomial)
-	mean, std = x_train.mean(axis=0), x_train.std(axis=0)
-	x_train = MyRidge.zscore_precomputed(x_train, mean, std)
-	x_test = MyRidge.zscore_precomputed(x_test, mean, std)
+	x_train_norm, x_test_norm = add_polynomials_and_normalize(model, x_train, x_test)
+	if fit_again:
+		model.fit_(x_train_norm, y_train)
 
-	# if fit_again:
-	# 	print('fitting again!')
-	# 	model.fit_(x_train, y_train)
-
-	y_hat = model.predict_(x_test)
-	np.savetxt(f'predictions_{model.polynomial}_{model.lambda_:.1f}.np', y_hat)
-	print(f' First pred = {y_hat[100]}. real value = {y_test[100]}')
+	y_hat = model.predict_(x_test_norm)
 	test_loss = model.loss_(y_test, y_hat)
 	return test_loss
 
@@ -57,7 +59,7 @@ def space_avocado(models: list[MyRidge]):
 		polynomial_degree = (model.thetas.shape[0] - 1) // default_x_columns
 		model.set_params(polynomial=polynomial_degree)
 		print(f'Testing model #{idx} again.')
-		loss = test_model(model, x_train_norm, x_test_norm, y_train, y_test)
+		loss = test_model(model, x_train, x_test, y_train, y_test)
 		print(f' Has loss of {loss:.1f}')
 		print(f'thetas = {model.thetas}')
 		assert not np.isnan(loss)
@@ -65,11 +67,12 @@ def space_avocado(models: list[MyRidge]):
 
 	best_model = min(models, key=lambda x: x.loss)
 	print(f'We found that the best model was with polynomial {best_model.polynomial} and lambda_ {best_model.lambda_}')
-	new_loss = test_model(best_model, x_train, x_test, y_train, y_test, fit_again=True)
+	new_loss = test_model(best_model, x_train, x_test, y_train, y_test, fit_again=False)
 	best_model.set_params(loss=new_loss)
 	print(f' New loss is {new_loss}')
 
 	# plot_evaluation_curve(models)
+	_, x_test_norm = add_polynomials_and_normalize(best_model, x_train, x_test)
 	best_models = [m for m in models if m.polynomial == best_model.polynomial]
 	plot_true_price(best_models, x_test, x_test_norm, y_test)
 

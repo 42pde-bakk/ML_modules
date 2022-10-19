@@ -71,14 +71,14 @@ class MyLinearRegression:
 		return (x - x.mean(axis=0)) / x.std(axis=0)
 
 	@staticmethod
-	def zscore_precomputed(x: np.ndarray, mean: float, std: float) -> np.ndarray | None:
+	def zscore_precomputed(x: np.ndarray, mean: np.ndarray, std: np.ndarray) -> np.ndarray | None:
 		"""
 		Computes the normalized version of a non-empty numpy.ndarray using the z-score standardization.
 		This version uses precomputed means and std_deviations so we can apply the same standardization to
 		both the training and the test set.
 		:param x: np.ndarray
-		:param mean: float of the mean value to use in the zscore
-		:param std: float of the mean value to use in the zscore
+		:param mean: np.ndarray (result of np.ndarray.mean(axis=0)
+		:param std: np.ndarray (result of np.ndarray.std(axis=0)
 		:return: normalized version of a non-empty numpy.ndarray using the z-score standardization.
 		"""
 		if not isinstance(x, np.ndarray) or x.size == 0:

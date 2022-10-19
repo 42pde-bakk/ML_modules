@@ -58,8 +58,6 @@ def benchmark_train(cross_validation_sets: list[dict]):
 			# And now we train our model again on the entire dataset
 
 			new_x = MyRidge.add_polynomial_features(complete_x, i)
-			print(f'complete dataset: mean={complete_x.mean(axis=0)}, std={complete_x.std(axis=0)}')
-			print(f'new      dataset: mean={new_x.mean(axis=0)}, std={complete_x.std(axis=0)}')
 			new_x = MyRidge.zscore(new_x)
 			model.set_params(thetas=default_thetas)
 			model.fit_(new_x, complete_y)
