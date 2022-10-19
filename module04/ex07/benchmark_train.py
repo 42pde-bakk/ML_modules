@@ -24,20 +24,23 @@ def prepare_data() -> list[dict]:
 	return build_cross_validation_sets(x, y, 0.75)
 
 
+def generate_random_thetas(n: int) -> np.ndarray:
+	return np.random.rand(3 * n + 1, 1)
+
+
 def benchmark_train(cross_validation_sets: list[dict]):
 	models = []
 	complete_x = np.vstack((cross_validation_sets[0]['x']['training'], cross_validation_sets[0]['x']['testing']))
 	complete_y = np.vstack((cross_validation_sets[0]['y']['training'], cross_validation_sets[0]['y']['testing']))
 	for i in range(1, 5):
-		default_thetas = np.ones(shape=(3 * i + 1, 1))
 		lambda_range = np.arange(0.0, 1.2, step=0.2)
 		for lambda_ in lambda_range:
 			print(f'Let\'s train a new model, polynomial={i}, λ {lambda_=}')
-			model = MyRidge(default_thetas, alpha=0.0005, max_iter=250_000, lambda_=lambda_)
+			model = MyRidge(thetas=generate_random_thetas(i), alpha=0.005, max_iter=10_000, lambda_=lambda_)
 			model.set_params(polynomial=i)
 			cross_validation_losses = []
 			for idx, sets in enumerate(cross_validation_sets):
-				model.set_params(thetas=default_thetas)  # Reset thetas
+				model.set_params(thetas=generate_random_thetas(i))  # Reset thetas
 				x_train, y_train = sets['x']['training'], sets['y']['training']
 				x_train = MyRidge.add_polynomial_features(x_train, i)
 				mean, std = x_train.mean(axis=0), x_train.std(axis=0)
@@ -60,7 +63,7 @@ def benchmark_train(cross_validation_sets: list[dict]):
 
 			new_x = MyRidge.add_polynomial_features(complete_x, i)
 			new_x = MyRidge.zscore(new_x)
-			model.set_params(thetas=default_thetas)
+			model.set_params(thetas=generate_random_thetas(i))
 			model.fit_(new_x, complete_y)
 			model.loss = model.loss_(complete_y, model.predict_(new_x))
 			print(f'Final model has a loss of {model.loss:.1f}.')

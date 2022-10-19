@@ -28,6 +28,10 @@ class MyRidge(MyLinearRegression):
 				setattr(self, key, value)
 		return self
 
+	def __predict(self, x: np.ndarray) -> np.ndarray:
+		"""This function assumes you have a column of 1's and a column of X"""
+		return x.dot(self.thetas)
+
 	def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
 		"""Computes the regularized linear gradient of three non-empty numpy.ndarray,
 		without any for-loop. The three arrays must have compatible shapes.
@@ -46,14 +50,14 @@ class MyRidge(MyLinearRegression):
 
 		ones = np.ones((y.shape[0], 1))
 		x_ = np.hstack((ones, x))
-		y_hat = x_.dot(self.thetas)
+		y_hat = self.__predict(x_)
 
 		return (np.dot(x_.T, (y_hat - y)) + (self.lambda_ * new_thetas)) / y.shape[0]
 
 	def __gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
 		new_thetas = self.__copy_thetas_first0()
-		y_hat = x.dot(self.thetas)
-		return (np.dot(x.T, (y_hat - y)) + self.lambda_ * new_thetas) / y.shape[0]
+		y_hat = self.__predict(x)
+		return (np.dot(x.T, (y_hat - y)) + (self.lambda_ * new_thetas)) / y.shape[0]
 
 	def fit_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray | None:
 		if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or x.size == 0 or y.size == 0:
