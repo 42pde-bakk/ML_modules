@@ -68,7 +68,7 @@ class MyLinearRegression:
 		"""
 		if not isinstance(x, np.ndarray) or x.size == 0:
 			return
-		return (x - x.mean()) / x.std()
+		return (x - x.mean(axis=0)) / x.std(axis=0)
 
 	@staticmethod
 	def zscore_precomputed(x: np.ndarray, mean: float, std: float) -> np.ndarray | None:
@@ -84,4 +84,3 @@ class MyLinearRegression:
 		if not isinstance(x, np.ndarray) or x.size == 0:
 			return
 		return (x - mean) / std
-

@@ -1,13 +1,13 @@
 import copy
 import pickle
-import sys
 
 import numpy as np
 import pandas as pd
-from ridge import MyRidge
-from data_splitter import data_splitter
-from cross_validation import build_cross_validation_sets
 
+from cross_validation import build_cross_validation_sets
+from data_splitter import data_splitter
+from ridge import MyRidge
+from plotting_like_the_lannisters import plot_evaluation_curve
 
 MODELS_PICKLE_FILE = 'models.pickle'
 CSV_FILE_PATH = '../resources/space_avocado.csv'
@@ -26,18 +26,20 @@ def prepare_data() -> list[dict]:
 
 def benchmark_train(cross_validation_sets: list[dict]):
 	models = []
+	complete_x = np.vstack((cross_validation_sets[0]['x']['training'], cross_validation_sets[0]['x']['testing']))
+	complete_y = np.vstack((cross_validation_sets[0]['y']['training'], cross_validation_sets[0]['y']['testing']))
 	for i in range(1, 5):
 		default_thetas = np.ones(shape=(3 * i + 1, 1))
 		lambda_range = np.arange(0.0, 1.2, step=0.2)
 		for lambda_ in lambda_range:
 			print(f'Let\'s train a new model, polynomial={i}, λ {lambda_=}')
-			model = MyRidge(default_thetas, alpha=0.001, max_iter=100_000, lambda_=lambda_)
+			model = MyRidge(default_thetas, alpha=0.0001, max_iter=100_000, lambda_=lambda_)
 			cross_validation_losses = []
 			for idx, sets in enumerate(cross_validation_sets):
 				model.set_params(thetas=default_thetas)  # Reset thetas
 				x_train, y_train = sets['x']['training'], sets['y']['training']
 				x_train = MyRidge.add_polynomial_features(x_train, i)
-				mean, std = x_train.mean(), x_train.std()
+				mean, std = x_train.mean(axis=0), x_train.std(axis=0)
 				x_train = MyRidge.zscore_precomputed(x_train, mean, std)
 
 				print(f'Training Model {i} (x.shape={x_train.shape}) with λ {lambda_=:.1f}', end='')
@@ -54,18 +56,27 @@ def benchmark_train(cross_validation_sets: list[dict]):
 			print(f'Model {i} with λ {lambda_=} had an average loss of {average_loss}')
 
 			# And now we train our model again on the entire dataset
-			x = np.vstack((cross_validation_sets[0]['x']['training'], cross_validation_sets[0]['x']['testing']))
-			y = np.vstack((cross_validation_sets[0]['y']['training'], cross_validation_sets[0]['y']['testing']))
-			x = MyRidge.zscore(MyRidge.add_polynomial_features(x, i))
+
+			new_x = MyRidge.add_polynomial_features(complete_x, i)
+			print(f'complete dataset: mean={complete_x.mean(axis=0)}, std={complete_x.std(axis=0)}')
+			print(f'new      dataset: mean={new_x.mean(axis=0)}, std={complete_x.std(axis=0)}')
+			new_x = MyRidge.zscore(new_x)
 			model.set_params(thetas=default_thetas)
-			model.fit_(x, y)
-			loss = model.loss_(y, model.predict_(x))
+			model.fit_(new_x, complete_y)
+			loss = model.loss_(complete_y, model.predict_(new_x))
 			print(f'Final model has a loss of {loss:.1f}.')
-			models.append(model)
+			models.append(copy.deepcopy(model))
+		# break  # For testing purposes, only test polynomial 1
 
 	print(f'lets dump {len(models)} models')
+	# for model in models:
+	# 	# print(f'{model=}, {model.lambda_=} {model.thetas=}')
+	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.thetas)
+	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.predict_(complete_x))
+	# 	pass
 	with open(MODELS_PICKLE_FILE, 'wb') as handle:
 		pickle.dump(models, handle)
+	plot_evaluation_curve(models)
 
 
 if __name__ == '__main__':

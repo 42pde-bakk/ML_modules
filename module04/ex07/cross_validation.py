@@ -1,4 +1,5 @@
 import sys
+
 import numpy as np
 
 
@@ -52,4 +53,3 @@ def build_cross_validation_sets(x: np.ndarray, y: np.ndarray, proportion: float)
 		cross_validation_sets.append(entry)
 
 	return cross_validation_sets
-
