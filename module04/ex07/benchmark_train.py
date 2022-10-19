@@ -33,7 +33,8 @@ def benchmark_train(cross_validation_sets: list[dict]):
 		lambda_range = np.arange(0.0, 1.2, step=0.2)
 		for lambda_ in lambda_range:
 			print(f'Let\'s train a new model, polynomial={i}, λ {lambda_=}')
-			model = MyRidge(default_thetas, alpha=0.0001, max_iter=100_000, lambda_=lambda_)
+			model = MyRidge(default_thetas, alpha=0.0005, max_iter=250_000, lambda_=lambda_)
+			model.set_params(polynomial=i)
 			cross_validation_losses = []
 			for idx, sets in enumerate(cross_validation_sets):
 				model.set_params(thetas=default_thetas)  # Reset thetas
@@ -61,10 +62,9 @@ def benchmark_train(cross_validation_sets: list[dict]):
 			new_x = MyRidge.zscore(new_x)
 			model.set_params(thetas=default_thetas)
 			model.fit_(new_x, complete_y)
-			loss = model.loss_(complete_y, model.predict_(new_x))
-			print(f'Final model has a loss of {loss:.1f}.')
+			model.loss = model.loss_(complete_y, model.predict_(new_x))
+			print(f'Final model has a loss of {model.loss:.1f}.')
 			models.append(copy.deepcopy(model))
-		# break  # For testing purposes, only test polynomial 1
 
 	print(f'lets dump {len(models)} models')
 	# for model in models:

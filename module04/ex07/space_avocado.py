@@ -69,9 +69,8 @@ def space_avocado(models: list[MyRidge]):
 	print(f'We found that the best model was with polynomial {best_model.polynomial} and lambda_ {best_model.lambda_}')
 	new_loss = test_model(best_model, x_train, x_test, y_train, y_test, fit_again=False)
 	best_model.set_params(loss=new_loss)
-	print(f' New loss is {new_loss}')
 
-	# plot_evaluation_curve(models)
+	plot_evaluation_curve(models)
 	_, x_test_norm = add_polynomials_and_normalize(best_model, x_train, x_test)
 	best_models = [m for m in models if m.polynomial == best_model.polynomial]
 	plot_true_price(best_models, x_test, x_test_norm, y_test)

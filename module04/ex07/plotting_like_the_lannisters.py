@@ -40,7 +40,8 @@ def plot_true_price(models: list[MyRidge], x: np.ndarray, x_norm, y: np.ndarray)
 		plt.scatter(x_col, y, label='True prices')
 		for model in models:
 			y_hat = model.predict_(x_norm)
+			print(f'feature {feature}, lambda_={model.lambda_}, y_hat[0] = {y_hat[0]}')
+			np.savetxt(f'thetas_lambda{model.lambda_:.1f}.txt', model.thetas)
 			plt.scatter(x_col, y_hat, label=f'Predicted price with lambda_={model.lambda_:.1f}')
-			break
 		plt.legend(loc='best')
 		plt.show()
