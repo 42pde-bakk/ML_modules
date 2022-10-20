@@ -39,7 +39,7 @@ def benchmark_train(cross_validation_sets: list[dict]):
 		lambda_range = np.arange(0.0, 1.2, step=0.2)
 		for lambda_ in lambda_range:
 			print(f'Let\'s train a new model, polynomial={i}, λ {lambda_=:.1f}')
-			model = MyRidge(thetas=generate_random_thetas(i), alpha=0.005, max_iter=10_000, lambda_=lambda_)
+			model = MyRidge(thetas=generate_random_thetas(i), alpha=0.005, max_iter=100_000, lambda_=lambda_)
 			model.set_params(polynomial=i)
 			cross_validation_losses = []
 			for idx, sets in enumerate(cross_validation_sets):
