@@ -20,7 +20,7 @@ def plot_mse_scores(losses: list[float], title: str):
 
 
 def plot_evaluation_curve(models: list[MyRidge]) -> None:
-	xticks = [f'Pol {model.polynomial} & λ = {model.lambda_}' for model in models]
+	xticks = [f'Pol {model.polynomial} & λ = {model.lambda_:.1f}' for model in models]
 	losses = [model.loss for model in models]
 	plt.title(f'Evaluation metrics of models')
 
