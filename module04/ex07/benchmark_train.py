@@ -27,7 +27,8 @@ def prepare_data() -> list[dict]:
 
 
 def generate_random_thetas(n: int) -> np.ndarray:
-	return np.random.rand(3 * n + 1, 1)
+	return np.ones(shape=(3 * n + 1, 1))
+	# return np.random.rand(3 * n + 1, 1)
 
 
 def benchmark_train(cross_validation_sets: list[dict]):
@@ -79,10 +80,6 @@ def benchmark_train(cross_validation_sets: list[dict]):
 	with open(MODELS_PICKLE_FILE, 'wb') as handle:
 		pickle.dump(models, handle)
 	plot_evaluation_curve(models)
-
-	complete_x_norm = MyRidge.zscore(complete_x)
-	plot_models = [m for m in models if m.polynomial == 1]
-	# plot_true_price(plot_models, complete_x, complete_x_norm, complete_y)
 
 
 if __name__ == '__main__':
