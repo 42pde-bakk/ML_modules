@@ -17,17 +17,25 @@ class MyLinearRegression:
 		self.alpha = alpha
 		self.max_iter = max_iter
 
-	# def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
-	# 	return x.T.dot(x.dot(self.thetas) - y) / x.shape[0]
-	#
-	# def fit_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray | None:
-	# 	if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or x.size == 0 or y.size == 0:
-	# 		return None
-	# 	ones = np.ones(shape=(x.shape[0], 1))
-	# 	x = np.column_stack((ones, x))
-	# 	for idx in range(self.max_iter):
-	# 		self.thetas = self.thetas - (self.alpha * self.gradient_(x, y))
-	# 	return self.thetas
+	def __gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+		"""This function assumes you have a column of 1's and a column of X"""
+		return x.T.dot(x.dot(self.thetas) - y) / x.shape[0]
+
+	def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+		"""And this function does not"""
+		ones = np.ones(shape=(x.shape[0], 1))
+		x = np.column_stack((ones, x))
+		y_hat = x.dot(self.thetas)
+		return x.T.dot(y_hat - y) / x.shape[0]
+
+	def fit_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray | None:
+		if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or x.size == 0 or y.size == 0:
+			return None
+		ones = np.ones(shape=(x.shape[0], 1))
+		x = np.column_stack((ones, x))
+		for idx in range(self.max_iter):
+			self.thetas = self.thetas - (self.alpha * self.__gradient_(x, y))
+		return self.thetas
 
 	def __predict(self, x: np.ndarray) -> np.ndarray:
 		"""This function assumes you have a column of 1's and a column of X"""
