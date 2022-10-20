@@ -9,18 +9,15 @@ from my_logistic_regression import MyLogisticRegression as MyLogR
 FEATURES = ['weight', 'prod_distance', 'time_delivery']
 
 
-def plot_f1_scores(models: list, title: str) -> None:
+def plot_f1_scores(f1_scores: list, title: str, lambdas: list) -> None:
 	""" Plots a bar plot showing the MSE score of the models
 		in function of the polynomial degree of the hypothesis"""
-	for sublist in models:
-		print(f'{sublist[0].lambda_=}')
-		plt.plot()
-	fig, axs = plt.subplots(nrows=2, ncols=2)
 	plt.title(title)
-	for zipcode in range(4):
-		f1_scores = [m.f1 for m in models if m.zipcode == zipcode]
-		axs[zipcode // 2, zipcode % 2].set_title(f'Zipcode {zipcode}')
-		axs[zipcode // 2, zipcode % 2].plot(range(1, len(f1_scores) + 1), f1_scores, label='yas queen')
+	plt.plot(range(1, len(f1_scores) + 1), f1_scores)
+	print(f1_scores)
+
+	plt.xticks(range(len(lambdas)), [f'{l:.1f}' for l in lambdas])
+
 	plt.xlabel('Lambda values')
 	plt.ylabel('F1 score')
 	plt.show()

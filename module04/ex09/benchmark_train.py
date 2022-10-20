@@ -66,7 +66,7 @@ def benchmark_train(cross_validation_sets: list[dict], amount_unique_y_values: i
 		current_models = []
 		for zipcode in range(amount_unique_y_values):
 			print(f'Let\'s train a new model, polynomial={zipcode}, λ {lambda_=:.1f}')
-			model = MyLogR(theta=generate_new_thetas(pol=POLYNOMIAL_DEGREE, ncols=3), alpha=0.005, max_iter=25_000, lambda_=lambda_)
+			model = MyLogR(theta=generate_new_thetas(pol=POLYNOMIAL_DEGREE, ncols=3), alpha=0.005, max_iter=1_000, lambda_=lambda_)
 			model.set_params(polynomial=POLYNOMIAL_DEGREE, zipcode=zipcode)
 			cross_validation_f1scores = []
 			for idx, sets in enumerate(cross_validation_sets):
@@ -102,22 +102,13 @@ def benchmark_train(cross_validation_sets: list[dict], amount_unique_y_values: i
 		argmax = predict_together.argmax(axis=1).reshape(-1, 1)
 		f1 = f1_score_(complete_y, argmax)
 		f1_scores.append(f1)
+		print(f'added {f1_scores}')
 
-		break
-		# predict_together = np.array(predict_together)
-
-	models = [tuple([m for m in models if m.lambda_ == l]) for l in lambda_range]
 	print(f'lets dump {len(models)} models')
-	# for model in models:
-	# 	# print(f'{model=}, {model.lambda_=} {model.thetas=}')
-	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.thetas)
-	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.predict_(complete_x))
-	# 	pass
 	with open(MODELS_PICKLE_FILE, 'wb') as handle:
 		pickle.dump(models, handle)
-	# all_predictions =
 	# plot_f1_scores()
-	plot_f1_scores(models, 'F1 scores')
+	plot_f1_scores(f1_scores, 'F1 scores', lambda_range)
 	# plot_evaluation_curve(models)
 
 
