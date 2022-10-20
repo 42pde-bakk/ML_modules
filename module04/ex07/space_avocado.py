@@ -7,7 +7,8 @@ import numpy as np
 import pandas as pd
 
 from data_splitter import data_splitter
-from plotting_like_the_lannisters import plot_true_price, plot_evaluation_curve
+from plotting_like_the_lannisters import *
+from data_utils import normalize_data, add_polynomials_and_normalize
 from ridge import MyRidge
 
 MODELS_PICKLE_FILE = 'models.pickle'
@@ -23,16 +24,6 @@ def prepare_data():
 	return data_splitter(x, y, 0.9)
 
 
-def add_polynomials_and_normalize(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-	x_train_new = MyRidge.add_polynomial_features(x_train, model.polynomial)
-	x_test_new = MyRidge.add_polynomial_features(x_test, model.polynomial)
-
-	mean, std = x_train_new.mean(axis=0), x_train_new.std(axis=0)
-	x_train_norm = MyRidge.zscore_precomputed(x_train_new, mean, std)
-	x_test_norm = MyRidge.zscore_precomputed(x_test_new, mean, std)
-	return x_train_norm, x_test_norm
-
-
 def test_model(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, fit_again=False):
 	x_train_norm, x_test_norm = add_polynomials_and_normalize(model, x_train, x_test)
 	if fit_again:
@@ -43,16 +34,8 @@ def test_model(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray, y_train:
 	return test_loss
 
 
-def normalize_data(x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-	mean, std = x_train.mean(), x_train.std()
-	normalized_x_train = MyRidge.zscore_precomputed(x_train, mean, std)
-	normalized_x_test = MyRidge.zscore_precomputed(x_test, mean, std)
-	return normalized_x_train, normalized_x_test
-
-
 def space_avocado(models: list[MyRidge]):
 	x_train, x_test, y_train, y_test = prepare_data()
-	x_train_norm, x_test_norm = normalize_data(x_train, x_test)
 	print(f'complete dataset: mean={x_train.mean(axis=0)}, std={x_train.std(axis=0)}')
 	default_x_columns = x_train.shape[1]
 	for idx, model in enumerate(models):
@@ -65,15 +48,29 @@ def space_avocado(models: list[MyRidge]):
 		assert not np.isnan(loss)
 		model.set_params(loss=loss)
 
+	# plot_evaluation_curve(models)
+
+	# Plot the evaluation curve which help you to select the best model (evaluation metrics vs models + λ factor).
 	best_model = min(models, key=lambda x: x.loss)
 	print(f'We found that the best model was with polynomial {best_model.polynomial} and lambda_ {best_model.lambda_}')
 	new_loss = test_model(best_model, x_train, x_test, y_train, y_test, fit_again=False)
 	best_model.set_params(loss=new_loss)
 
-	plot_evaluation_curve(models)
-	_, x_test_norm = add_polynomials_and_normalize(best_model, x_train, x_test)
+	# Plot for all lambda_ values of our best model
+	# Plot the true price and the predicted price obtained via your best model with the
+	# different λ values (meaning the dataset + the 5 predicted curves).
 	best_models = [m for m in models if m.polynomial == best_model.polynomial]
-	plot_true_price(best_models, x_test, x_test_norm, y_test)
+	axes = setup_triple_plot('Best model', x_test, y_test)
+	for idx, model in enumerate(best_models):
+		plot(axes, model, x_test)
+	plt.show()
+
+	# Let's plot all the different polynomials against each other
+	axes = setup_triple_plot('Showcase', x_test, y_test)
+	submodels = [m for m in models if np.isclose(m.lambda_, 0.0)]
+	for idx, model in enumerate(submodels):
+		plot(axes, model, x_test)
+	plt.show()
 
 
 if __name__ == '__main__':
