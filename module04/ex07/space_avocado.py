@@ -48,7 +48,7 @@ def space_avocado(models: list[MyRidge]):
 		assert not np.isnan(loss)
 		model.set_params(loss=loss)
 
-	# plot_evaluation_curve(models)
+	plot_evaluation_curve(models)
 
 	# Plot the evaluation curve which help you to select the best model (evaluation metrics vs models + λ factor).
 	best_model = min(models, key=lambda x: x.loss)
