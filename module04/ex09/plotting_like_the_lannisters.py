@@ -9,7 +9,7 @@ from my_logistic_regression import MyLogisticRegression as MyLogR
 FEATURES = ['weight', 'prod_distance', 'time_delivery']
 
 
-def plot_f1_scores(f1_scores: list, title: str, lambdas: list) -> None:
+def plot_f1_scores(f1_scores: list | np.ndarray, title: str, lambdas: list) -> None:
 	""" Plots a bar plot showing the MSE score of the models
 		in function of the polynomial degree of the hypothesis"""
 	plt.title(title)
