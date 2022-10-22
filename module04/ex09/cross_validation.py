@@ -37,7 +37,6 @@ def build_cross_validation_sets(x: np.ndarray, y: np.ndarray, proportion: float)
 		if end > 1.0:
 			print(f'end is bigger than 1.0')
 			break
-		print(f'begin = {int(start * x.shape[0])}, end = {int(end * x.shape[0])}')
 		x_train_set_0, x_test_set, x_train_set_1 = np.split(x, [int(start * x.shape[0]), int(end * x.shape[0])])
 		y_train_set_0, y_test_set, y_train_set_1 = np.split(y, [int(start * y.shape[0]), int(end * y.shape[0])])
 
@@ -51,7 +50,6 @@ def build_cross_validation_sets(x: np.ndarray, y: np.ndarray, proportion: float)
 				'testing': y_test_set
 			}
 		}
-		print(f'{start}: {entry["x"]["training"].shape=}, {entry["x"]["testing"].shape=}, {entry["y"]["training"].shape=}, {entry["y"]["testing"].shape=}')
 		cross_validation_sets.append(entry)
 
 	return cross_validation_sets

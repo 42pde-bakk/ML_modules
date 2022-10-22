@@ -22,18 +22,24 @@ def prepare_data():
 	data_x = pd.read_csv(CENSUS_CSV_PATH)
 	data_y = pd.read_csv(PLANETS_CSV_PATH)
 	x = data_x[FEATURES].to_numpy().reshape(-1, 3)
-	x = MyLogR.zscore(MyLogR.add_polynomial_features(x, POLYNOMIAL_DEGREE))
 	y = data_y['Origin'].to_numpy().reshape(-1, 1)
-	return data_splitter(x, y, 0.9)
+
+	_, x_test_orig = np.split(x, [int(0.9 * x.shape[0])])
+	x = MyLogR.add_polynomial_features(x, POLYNOMIAL_DEGREE)
+	x = MyLogR.zscore(x)
+
+	indices = [int(0.25 * x.shape[0]), int(0.35 * x.shape[0])]
+	x_split = np.split(x, indices)
+	y_split = np.split(y, indices)
+
+	x, x_test = np.vstack((x_split[0], x_split[2])), x_split[1]
+	y, y_test = np.vstack((y_split[0], y_split[2])), y_split[1]
+	return (x, x_test, y, y_test), x_test_orig
 
 
-def combine_models(models: list[MyLogR], x_test: np.ndarray, y_test: np.ndarray) -> float:
+def combine_models(models: list[MyLogR], x_test: np.ndarray) -> np.ndarray:
 	predict_together = np.hstack([m.predict_(x_test) for m in models])
-	y_hat = predict_together.argmax(axis=1).reshape(-1, 1)
-	f1 = f1_score_(y_test, y_hat)
-	accuracy = accuracy_score_(y_test, y_hat)
-	print(f'Correctly predicted {accuracy * 100:.1f}%, f1_score = {f1:.1f}')
-	return f1
+	return predict_together.argmax(axis=1).reshape(-1, 1)
 
 
 def test_model(model: MyLogR, x_train: np.ndarray, x_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, fit_again=False):
@@ -46,16 +52,27 @@ def test_model(model: MyLogR, x_train: np.ndarray, x_test: np.ndarray, y_train: 
 	return test_loss
 
 
-def solar_system_census(all_models: list[list[MyLogR]]):
-	x_train, x_test, y_train, y_test = prepare_data()
+def solar_system_census(all_models: list[list[MyLogR]]) -> None:
+	(x_train, x_test, y_train, y_test), x_test_orig = prepare_data()
 	lambda_range = np.arange(0.0, 1.2, step=0.2)
 	f1_scores = []
 
 	for lambda_, models in zip(lambda_range, all_models):
-		f1_score = combine_models(models, x_test, y_test)
-		f1_scores.append(f1_score)
+		y_hat = combine_models(models, x_test)
+		f1 = f1_score_(y_test, y_hat)
+		np.savetxt(f'debug/predictions/y_test.txt', y_test)
+		np.savetxt(f'debug/predictions/y_hat.txt', y_hat)
+		accuracy = accuracy_score_(y_test, y_hat)
+		print(f'Correctly predicted {accuracy * 100:.1f}%, f1_score = {f1:.1f}')
+		f1_scores.append(f1)
 
 	plot_f1_scores(f1_scores, 'F1 scores on the test set', lambda_range)
+
+	best_idx = f1_scores.index(max(f1_scores))
+	models = all_models[best_idx]
+	# re-train.... lord knows why
+	y_hat = combine_models(models, x_test)
+	plot_true_price(x_test_orig, y_hat, y_test)
 
 
 if __name__ == '__main__':
