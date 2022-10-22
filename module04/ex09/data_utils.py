@@ -1,5 +1,7 @@
 from typing import Tuple
+
 import numpy as np
+
 from my_logistic_regression import MyLogisticRegression as MyLogR
 
 

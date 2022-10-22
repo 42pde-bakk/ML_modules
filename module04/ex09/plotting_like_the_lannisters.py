@@ -23,8 +23,8 @@ def plot_true_price(x: np.ndarray, y_hat: np.ndarray, y: np.ndarray) -> None:
 		plot.set_title(feature)
 		x_col = x[:, i]
 		size = 15
-		plot.scatter(x_col, y, label='True zipcodes', s=5*size)
-		plot.scatter(x_col, y_hat, label=f'Predicted zipcode', s=2*size)
+		plot.scatter(x_col, y, label='True zipcodes', s=5 * size)
+		plot.scatter(x_col, y_hat, label=f'Predicted zipcode', s=2 * size)
 		plot.legend(loc='best')
 
 	axs[1, 1].text(0.1, 0.8, 'github.com/', fontsize=20)

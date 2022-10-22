@@ -5,12 +5,11 @@ import sys
 import numpy as np
 import pandas as pd
 
+from benchmark_train import train_models_for_all_zipcodes
 from data_utils import add_polynomials_and_normalize
 from my_logistic_regression import MyLogisticRegression as MyLogR
 from other_metrics import f1_score_, accuracy_score_
 from plotting_like_the_lannisters import plot_f1_scores, plot_true_price
-from benchmark_train import train_models_for_all_zipcodes
-
 
 MODELS_PICKLE_FILE = 'models.pickle'
 CENSUS_CSV_PATH = '../resources/solar_system_census.csv'
