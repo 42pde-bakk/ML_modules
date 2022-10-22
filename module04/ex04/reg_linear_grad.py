@@ -33,27 +33,6 @@ def l2(theta: np.ndarray) -> float:
 	return new_theta.T.dot(new_theta).sum()
 
 
-@accepts(np.ndarray, np.ndarray, np.ndarray, float)
-def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: float):
-	"""Computes the regularized loss of a logistic regression model from two non-empty numpy.ndarray, without any for lArgs:
-		y: has to be an numpy.ndarray, a vector of shape m * 1.
-		y_hat: has to be an numpy.ndarray, a vector of shape m * 1.
-		theta: has to be a numpy.ndarray, a vector of shape n * 1.
-		lambda_: has to be a float.
-	Returns:
-		The regularized loss as a float.
-		None if y, y_hat, or theta is empty numpy.ndarray.
-		None if y and y_hat do not share the same shapes.
-	Raises:
-		This function should not raise any Exception.
-	"""
-	m = y.shape[0]
-	eps = 1e-15
-
-	inner = y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
-	return -(np.sum(inner) / m) + lambda_ * l2(theta) / (2 * m)
-
-
 @accepts(np.ndarray, np.ndarray, np.ndarray, float | int)
 def reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float) -> np.ndarray | None:
 	"""Computes the regularized linear gradient of three non-empty numpy.ndarray,
