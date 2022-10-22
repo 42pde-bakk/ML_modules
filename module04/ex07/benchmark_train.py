@@ -67,16 +67,8 @@ def benchmark_train(cross_validation_sets: list[dict]):
 			y_hat = model.predict_(new_x)
 			model.loss = model.loss_(complete_y, y_hat)
 			print(f'Final model has a loss of {model.loss:.1f}.')
-			np.savetxt(f'debug/thetas/polynomial{model.polynomial}_lambda{model.lambda_:.1f}.txt', model.thetas)
-			np.savetxt(f'debug/predictions/polynomial{model.polynomial}_lambda{model.lambda_:.1f}.txt', y_hat)
 			models.append(copy.deepcopy(model))
 
-	print(f'lets dump {len(models)} models')
-	# for model in models:
-	# 	# print(f'{model=}, {model.lambda_=} {model.thetas=}')
-	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.thetas)
-	# 	# np.savetxt(f'thetas{model.lambda_}.np', model.predict_(complete_x))
-	# 	pass
 	with open(MODELS_PICKLE_FILE, 'wb') as handle:
 		pickle.dump(models, handle)
 	plot_evaluation_curve(models)

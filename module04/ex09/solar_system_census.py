@@ -5,11 +5,12 @@ import sys
 import numpy as np
 import pandas as pd
 
-from data_splitter import data_splitter
-from data_utils import normalize_data, add_polynomials_and_normalize
+from data_utils import add_polynomials_and_normalize
 from my_logistic_regression import MyLogisticRegression as MyLogR
 from other_metrics import f1_score_, accuracy_score_
 from plotting_like_the_lannisters import plot_f1_scores, plot_true_price
+from benchmark_train import train_models_for_all_zipcodes
+
 
 MODELS_PICKLE_FILE = 'models.pickle'
 CENSUS_CSV_PATH = '../resources/solar_system_census.csv'
@@ -37,6 +38,10 @@ def prepare_data():
 	return (x, x_test, y, y_test), x_test_orig
 
 
+def generate_new_thetas(pol: int, ncols: int) -> np.ndarray:
+	return np.ones(shape=(ncols * pol + 1, 1))
+
+
 def combine_models(models: list[MyLogR], x_test: np.ndarray) -> np.ndarray:
 	predict_together = np.hstack([m.predict_(x_test) for m in models])
 	return predict_together.argmax(axis=1).reshape(-1, 1)
@@ -60,8 +65,6 @@ def solar_system_census(all_models: list[list[MyLogR]]) -> None:
 	for lambda_, models in zip(lambda_range, all_models):
 		y_hat = combine_models(models, x_test)
 		f1 = f1_score_(y_test, y_hat)
-		np.savetxt(f'debug/predictions/y_test.txt', y_test)
-		np.savetxt(f'debug/predictions/y_hat.txt', y_hat)
 		accuracy = accuracy_score_(y_test, y_hat)
 		print(f'Correctly predicted {accuracy * 100:.1f}%, f1_score = {f1:.1f}')
 		f1_scores.append(f1)
@@ -71,6 +74,7 @@ def solar_system_census(all_models: list[list[MyLogR]]) -> None:
 	best_idx = f1_scores.index(max(f1_scores))
 	models = all_models[best_idx]
 	# re-train.... lord knows why
+	models = train_models_for_all_zipcodes(x_train, y_train, lambda_=models[0].lambda_)
 	y_hat = combine_models(models, x_test)
 	plot_true_price(x_test_orig, y_hat, y_test)
 

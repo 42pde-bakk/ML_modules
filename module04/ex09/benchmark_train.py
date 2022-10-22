@@ -14,21 +14,11 @@ MODELS_PICKLE_FILE = 'models.pickle'
 CENSUS_CSV_PATH = '../resources/solar_system_census.csv'
 PLANETS_CSV_PATH = '../resources/solar_system_census_planets.csv'
 POLYNOMIAL_DEGREE = 3
-AMOUNT_UNIQUE_Y_VALUES = 0
 
 
 def find_unique_y_values(y: np.ndarray) -> int:
 	unique = np.unique(y).flatten()
 	return len(set(unique))
-
-
-def show_distribution(y: np.ndarray):
-	y_arrs = np.split(y, 4)
-	unique, counts = np.unique(y, return_counts=True)
-	print('total:', dict(zip(unique, counts)))
-	for idx, arr in enumerate(y_arrs):
-		unique, counts = np.unique(arr, return_counts=True)
-		print(f'\t{idx}:', dict(zip(unique, counts)))
 
 
 def prepare_data():
@@ -46,10 +36,8 @@ def prepare_data():
 
 	x, x_test = np.vstack((x_split[0], x_split[2])), x_split[1]
 	y, y_test = np.vstack((y_split[0], y_split[2])), y_split[1]
-	global AMOUNT_UNIQUE_Y_VALUES
-	AMOUNT_UNIQUE_Y_VALUES = find_unique_y_values(y)
 	# Here we discard x_test and y_test because we will use them in solar_system_census.py to test on
-	return build_cross_validation_sets(x, y, 0.75), x, x_test, y, y_test
+	return build_cross_validation_sets(x, y, 0.75), x, y
 
 
 def generate_new_thetas(pol: int, ncols: int) -> np.ndarray:
@@ -68,9 +56,9 @@ def combine_models(models: list[MyLogR], x_test: np.ndarray, y_test: np.ndarray)
 
 def train_models_for_all_zipcodes(x_train: np.ndarray, y_train: np.ndarray, lambda_: float) -> list:
 	current_models = []
-	for zipcode in range(AMOUNT_UNIQUE_Y_VALUES):
+	for zipcode in range(4):
 		thetas = generate_new_thetas(POLYNOMIAL_DEGREE, 3)
-		model = MyLogR(theta=thetas, alpha=0.05, max_iter=15_000, lambda_=lambda_)
+		model = MyLogR(theta=thetas, alpha=0.01, max_iter=15_000, lambda_=lambda_)
 		model.set_params(polynomial=POLYNOMIAL_DEGREE, zipcode=zipcode)
 
 		y_train_zipcode = np.where(y_train == zipcode, 1, 0)
@@ -79,7 +67,7 @@ def train_models_for_all_zipcodes(x_train: np.ndarray, y_train: np.ndarray, lamb
 	return current_models
 
 
-def benchmark_train(cross_validation_sets: list[dict], x, x_test_full, y, y_test_full):
+def benchmark_train(cross_validation_sets: list[dict], x, y):
 	lambda_range = np.arange(0.0, 1.2, step=0.2)
 	models, lambda_f1s = [], []
 
@@ -107,16 +95,11 @@ def benchmark_train(cross_validation_sets: list[dict], x, x_test_full, y, y_test
 		# and redo the fitting of the model,
 		# but this time with the entire dataset as training data
 		current_models = train_models_for_all_zipcodes(x, y, lambda_)
-		# combine_models(current_models, x_test_full, y_test_full)
-		# sys.exit(1)
 		models.append(copy.deepcopy(current_models))
 
-	print(f'lets dump {len(models)} models')
 	with open(MODELS_PICKLE_FILE, 'wb') as handle:
 		pickle.dump(models, handle)
-	# plot_f1_scores()
 	plot_f1_scores(lambda_f1s, 'F1 scores', lambda_range)
-	# plot_evaluation_curve(models)
 
 
 if __name__ == '__main__':
