@@ -49,8 +49,9 @@ def l2(theta: np.ndarray) -> float:
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray, float)
-def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: float):
-	"""Computes the regularized loss of a logistic regression model from two non-empty numpy.ndarray, without any for lArgs:
+def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: float) -> float | None:
+	"""Computes the regularized loss of a logistic regression model from two non-empty numpy.ndarray, without any for loops
+	Args:
 		y: has to be an numpy.ndarray, a vector of shape m * 1.
 		y_hat: has to be an numpy.ndarray, a vector of shape m * 1.
 		theta: has to be a numpy.ndarray, a vector of shape n * 1.
@@ -62,19 +63,22 @@ def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: 
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if y.shape[0] != y_hat.shape[0]:
+		return None
 	m = y.shape[0]
 	eps = 1e-15
 
 	inner = y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
-	return (-1 / m) * np.sum(inner) + lambda_ * l2(theta) / (2 * m)
+	return -(np.sum(inner) / m) + lambda_ * l2(theta) / (2 * m)
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray, float | int)
-def reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float | int) -> np.ndarray:
-	"""Computes the regularized logistic gradient of three non-empty numpy.ndarray, with two for-loops. The three arrayArgs:
+def reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float | int) -> np.ndarray | None:
+	"""Computes the regularized logistic gradient of three non-empty numpy.ndarray, with two for-loops. The three arrays:
+	Args:
 		y: has to be a numpy.ndarray, a vector of shape m * 1.
 		x: has to be a numpy.ndarray, a matrix of dimesion m * n.
-		theta: has to be a numpy.ndarray, a vector of shape n * 1.
+		theta: has to be a numpy.ndarray, a vector of shape (n + 1) * 1. (Subject mistake)
 		lambda_: has to be a float.
 	Returns:
 		A numpy.ndarray, a vector of shape n * 1, containing the results of the formula for all j.
@@ -83,6 +87,8 @@ def reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: 
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if y.shape[0] != x.shape[0] or theta.shape != (x.shape[1] + 1, 1):
+		return None
 	new_thetas = np.copy(theta)
 	new_thetas[0][0] = 0.0
 
@@ -101,11 +107,12 @@ def reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: 
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray, float | int)
-def vec_reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float | int) -> np.ndarray:
-	"""Computes the regularized logistic gradient of three non-empty numpy.ndarray, without any for-loop. The three arrArgs:
+def vec_reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float | int) -> np.ndarray | None:
+	"""Computes the regularized logistic gradient of three non-empty numpy.ndarray, without any for-loop. The three arrays:
+	Args:
 		y: has to be a numpy.ndarray, a vector of shape m * 1.
 		x: has to be a numpy.ndarray, a matrix of shape m * n.
-		theta: has to be a numpy.ndarray, a vector of shape n * 1.
+		theta: has to be a numpy.ndarray, a vector of shape (n + 1) * 1. (Subject mistake)
 		lambda_: has to be a float.
 	Returns:
 		A numpy.ndarray, a vector of shape n * 1, containing the results of the formula for all j.
@@ -114,6 +121,8 @@ def vec_reg_logistic_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambd
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if y.shape[0] != x.shape[0] or theta.shape != (x.shape[1] + 1, 1):
+		return None
 	new_thetas = np.copy(theta)
 	new_thetas[0][0] = 0.0
 
