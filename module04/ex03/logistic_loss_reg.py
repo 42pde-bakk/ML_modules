@@ -51,4 +51,4 @@ def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: 
 	eps = 1e-15
 
 	inner = y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
-	return (-1 / m) * np.sum(inner) + lambda_ * l2(theta) / (2 * m)
+	return -(np.sum(inner) / m) + lambda_ * l2(theta) / (2 * m)

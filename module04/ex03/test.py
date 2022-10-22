@@ -23,6 +23,5 @@ def main():
 	assert np.isclose(result3, 0.6997704371647596)
 
 
-
 if __name__ == '__main__':
 	main()
