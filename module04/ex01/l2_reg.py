@@ -49,4 +49,5 @@ def l2(theta: np.ndarray) -> float:
 	"""
 	new_theta = theta.copy()
 	new_theta[0][0] = 0
-	return new_theta.T.dot(new_theta).sum()
+	return np.square(new_theta).sum()
+	# return new_theta.T.dot(new_theta).sum()
