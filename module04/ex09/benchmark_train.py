@@ -29,6 +29,7 @@ def prepare_data() -> list[dict]:
 	data_y = pd.read_csv(PLANETS_CSV_PATH)
 	x = data_x[features].to_numpy().reshape(-1, 3)
 	x = MyLogR.zscore(MyLogR.add_polynomial_features(x, POLYNOMIAL_DEGREE))
+	# x = MyLogR.add_polynomial_features(MyLogR.zscore(x), POLYNOMIAL_DEGREE)
 	y = data_y['Origin'].to_numpy().reshape(-1, 1)
 	x, _, y, _ = data_splitter(x, y, 0.9)
 	global AMOUNT_UNIQUE_Y_VALUES
@@ -47,7 +48,7 @@ def combine_models(models: list[MyLogR], x_test: np.ndarray, y_test: np.ndarray)
 	y_hat = predict_together.argmax(axis=1).reshape(-1, 1)
 	f1 = f1_score_(y_test, y_hat)
 	accuracy = accuracy_score_(y_test, y_hat)
-	print(f'Correctly predicted {accuracy * 100:.1f}%, f1_score = {f1:.1f}')
+	print(f'Correctly predicted {accuracy * 100:.1f}%, f1_score = {f1:.2f}')
 	return f1
 
 
@@ -59,7 +60,6 @@ def train_models_for_all_zipcodes(x_train: np.ndarray, y_train: np.ndarray, lamb
 		model.set_params(polynomial=POLYNOMIAL_DEGREE, zipcode=zipcode)
 
 		y_train_zipcode = np.where(y_train == zipcode, 1, 0)
-		print(f'Lets train model {zipcode=}')
 		_ = model.fit_(x_train, y_train_zipcode)
 		current_models.append(model)
 	return current_models
@@ -72,7 +72,7 @@ def benchmark_train(cross_validation_sets: list[dict]):
 	models, lambda_f1s = [], []
 
 	for lambda_ in lambda_range:
-		print(f'Lambda = {lambda_}')
+		print(f'Lambda = {lambda_:.1f}')
 		cross_validation_f1scores = []
 		for idx, sets in enumerate(cross_validation_sets):
 			print(f'Cross validation attempt {idx}')
@@ -87,7 +87,7 @@ def benchmark_train(cross_validation_sets: list[dict]):
 			cross_validation_f1scores.append(f1)
 		# get the average score of the cross-validation models
 		average_f1_score = sum(cross_validation_f1scores) / len(cross_validation_f1scores)
-		print(f'Average score of cross validation with lambda_={lambda_} is {average_f1_score}')
+		print(f'Average score of cross validation with lambda_={lambda_} is {average_f1_score:.2f}')
 		lambda_f1s.append(average_f1_score)
 
 		# and redo the fitting of the model,
