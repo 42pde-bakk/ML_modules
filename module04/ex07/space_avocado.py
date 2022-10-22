@@ -1,14 +1,12 @@
 import os
 import pickle
 import sys
-from typing import Tuple
 
-import numpy as np
 import pandas as pd
 
 from data_splitter import data_splitter
+from data_utils import add_polynomials_and_normalize
 from plotting_like_the_lannisters import *
-from data_utils import normalize_data, add_polynomials_and_normalize
 from ridge import MyRidge
 
 MODELS_PICKLE_FILE = 'models.pickle'
@@ -36,15 +34,13 @@ def test_model(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray, y_train:
 
 def space_avocado(models: list[MyRidge]):
 	x_train, x_test, y_train, y_test = prepare_data()
-	print(f'complete dataset: mean={x_train.mean(axis=0)}, std={x_train.std(axis=0)}')
 	default_x_columns = x_train.shape[1]
 	for idx, model in enumerate(models):
 		polynomial_degree = (model.thetas.shape[0] - 1) // default_x_columns
 		model.set_params(polynomial=polynomial_degree)
-		print(f'Testing model #{idx} again.')
+		print(f'Testing model #{idx} again.', end='')
 		loss = test_model(model, x_train, x_test, y_train, y_test)
 		print(f' Has loss of {loss:.1f}')
-		print(f'thetas = {model.thetas}')
 		assert not np.isnan(loss)
 		model.set_params(loss=loss)
 

@@ -1,12 +1,13 @@
 from typing import Tuple
+
 import numpy as np
+
 from ridge import MyRidge
 
 
 def add_polynomials_and_normalize(model: MyRidge, x_train: np.ndarray, x_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 	x_train_new = MyRidge.add_polynomial_features(x_train, model.polynomial)
 	x_test_new = MyRidge.add_polynomial_features(x_test, model.polynomial)
-
 	return normalize_data(x_train_new, x_test_new)
 
 

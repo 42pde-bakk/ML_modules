@@ -3,7 +3,6 @@ from matplotlib import pyplot as plt
 
 from ridge import MyRidge
 
-
 FEATURES = ['weight', 'prod_distance', 'time_delivery']
 
 

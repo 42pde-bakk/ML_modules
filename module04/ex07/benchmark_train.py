@@ -1,15 +1,14 @@
 import copy
 import pickle
-from typing import Tuple
 
 import numpy as np
 import pandas as pd
 
 from cross_validation import build_cross_validation_sets
 from data_splitter import data_splitter
+from data_utils import add_polynomials_and_normalize
+from plotting_like_the_lannisters import plot_evaluation_curve
 from ridge import MyRidge
-from plotting_like_the_lannisters import plot_evaluation_curve, plot_true_price
-from data_utils import normalize_data, add_polynomials_and_normalize
 
 MODELS_PICKLE_FILE = 'models.pickle'
 CSV_FILE_PATH = '../resources/space_avocado.csv'
