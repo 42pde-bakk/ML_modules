@@ -51,11 +51,11 @@ def reg_log_loss_(y: np.ndarray, y_hat: np.ndarray, theta: np.ndarray, lambda_: 
 	eps = 1e-15
 
 	inner = y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
-	return (-1 / m) * np.sum(inner) + lambda_ * l2(theta) / (2 * m)
+	return -(np.sum(inner) / m) + lambda_ * l2(theta) / (2 * m)
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray, float | int)
-def reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float) -> np.ndarray:
+def reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float) -> np.ndarray | None:
 	"""Computes the regularized linear gradient of three non-empty numpy.ndarray,
 	with two for-loop. The three arrays must have compatible shapes.
 	Args:
@@ -71,6 +71,8 @@ def reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: fl
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if y.shape[0] != x.shape[0] or theta.shape != (x.shape[1] + 1, 1):
+		return None
 	new_thetas = np.copy(theta)
 	new_thetas[0][0] = 0.0
 
@@ -89,7 +91,7 @@ def reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: fl
 
 
 @accepts(np.ndarray, np.ndarray, np.ndarray, float | int)
-def vec_reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float) -> np.ndarray:
+def vec_reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_: float) -> np.ndarray | None:
 	"""Computes the regularized linear gradient of three non-empty numpy.ndarray,
 	without any for-loop. The three arrays must have compatible shapes.
 	Args:
@@ -105,6 +107,8 @@ def vec_reg_linear_grad(y: np.ndarray, x: np.ndarray, theta: np.ndarray, lambda_
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if y.shape[0] != x.shape[0] or theta.shape != (x.shape[1] + 1, 1):
+		return None
 	new_thetas = np.copy(theta)
 	new_thetas[0][0] = 0.0
 
